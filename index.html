@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your AI Voice — Techie TC</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary:   #7B9EC4;
+      --neutral:   #1A1D23;
+      --text:      #E8EAF0;
+      --text-soft: rgba(232,234,240,0.55);
+      --border:    rgba(232,234,240,0.10);
+      --surface:   #22262E;
+      --surface-2: #2A2F3A;
+      --success:   #7A9E87;
+      --error:     #C4897A;
+    }
+
+    body {
+      background: var(--neutral);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: 16px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ── SCREENS ── */
+    .screen {
+      display: none;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+    }
+
+    .screen.active { display: flex; }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 48px;
+      max-width: 480px;
+      width: 100%;
+    }
+
+    .card-wide {
+      max-width: 780px;
+    }
+
+    /* ── TYPOGRAPHY ── */
+    .eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      font-weight: 300;
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    h1 em { font-style: italic; color: var(--primary); }
+
+    .subtitle {
+      font-size: 15px;
+      color: var(--text-soft);
+      margin-bottom: 32px;
+      line-height: 1.65;
+    }
+
+    /* ── FORM ELEMENTS ── */
+    .field {
+      margin-bottom: 24px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-bottom: 8px;
+    }
+
+    input[type="email"],
+    input[type="text"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      background: var(--surface-2);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 300;
+      transition: border-color 0.2s;
+      resize: vertical;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-block;
+      padding: 13px 28px;
+      background: var(--primary);
+      color: white;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      width: 100%;
+      text-align: center;
+    }
+
+    .btn:hover { opacity: 0.85; }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      margin-top: 12px;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      opacity: 1;
+    }
+
+    /* ── MESSAGES ── */
+    .message {
+      padding: 14px 18px;
+      border-radius: 3px;
+      font-size: 14px;
+      margin-bottom: 24px;
+      display: none;
+    }
+
+    .message.success {
+      background: color-mix(in srgb, var(--success) 12%, white);
+      border: 1px solid var(--success);
+      color: var(--text);
+    }
+
+    .message.error {
+      background: color-mix(in srgb, var(--error) 12%, white);
+      border: 1px solid var(--error);
+      color: var(--text);
+    }
+
+    .message.visible { display: block; }
+
+    /* ── PROGRESS BAR ── */
+    .progress-container {
+      margin-bottom: 32px;
+    }
+
+    .progress-label {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+
+    .progress-bar {
+      height: 3px;
+      background: var(--surface-2);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      transition: width 0.3s ease;
+    }
+
+    /* ── DASHBOARD HEADER ── */
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dashboard-header h1 { margin-bottom: 0; }
+
+    .user-info {
+      font-size: 14px;
+      color: var(--text-soft);
+      text-align: right;
+    }
+
+    .user-info .email {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 400;
+    }
+
+    .sign-out-link {
+      color: var(--primary);
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .sign-out-link:hover { text-decoration: underline; }
+
+  </style>
+</head>
+<body>
+
+  <!-- ── LOGIN SCREEN ── -->
+  <div id="screen-login" class="screen active">
+    <div class="card">
+      <div class="eyebrow">Techie TC</div>
+      <h1>Build Your <em>Voice</em></h1>
+      <p class="subtitle">Sign in with your email to start or continue your coaching voice project.</p>
+      
+      <div id="login-message" class="message"></div>
+
+      <div class="field">
+        <label for="email-input">Email address</label>
+        <input type="email" id="email-input" placeholder="your@email.com" />
+      </div>
+
+      <button class="btn" id="send-link-btn">Send me my link</button>
+    </div>
+  </div>
+
+  <!-- ── CHECK EMAIL SCREEN ── -->
+  <div id="screen-check-email" class="screen">
+    <div class="card">
+      <div class="eyebrow">Check your email</div>
+      <h1>Look for our link</h1>
+      <p class="subtitle">We've sent a sign-in link to your email. Click it to continue building your voice. The link expires in 24 hours.</p>
+      
+      <button class="btn btn-outline" id="back-to-login-btn">Back to sign in</button>
+    </div>
+  </div>
+
+  <!-- ── LOADING SCREEN ── -->
+  <div id="screen-loading" class="screen">
+    <div class="card">
+      <p style="text-align: center; color: var(--text-soft);">Loading your project...</p>
+    </div>
+  </div>
+
+  <!-- ── START INTAKE SCREEN ── -->
+  <div id="screen-start-intake" class="screen">
+    <div class="card">
+      <div class="eyebrow">Ready?</div>
+      <h1>Build Your <em>Voice</em></h1>
+      <p class="subtitle">We'll walk you through five sections to capture what makes your coaching voice distinctive. About 20 minutes total.</p>
+      
+      <div id="start-message" class="message"></div>
+
+      <button class="btn" id="start-intake-btn">Start your voice project</button>
+      
+      <div class="user-info" style="margin-top: 32px; text-align: left; border-top: 1px solid var(--border); padding-top: 24px;">
+        <span class="email" id="start-email"></span>
+        <a class="sign-out-link" id="sign-out-btn-start">Sign out</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CONTINUE INTAKE SCREEN ── -->
+  <div id="screen-continue-intake" class="screen">
+    <div class="card">
+      <div class="eyebrow">Welcome back</div>
+      <h1>Continue Your <em>Voice</em></h1>
+      <p class="subtitle">You're partway through building your voice. Pick up where you left off.</p>
+
+      <div class="progress-container">
+        <div class="progress-label">Progress</div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
+        </div>
+        <p style="font-size: 12px; color: var(--text-soft); margin-top: 8px;">
+          <span id="progress-text">Section 1 of 5</span>
+        </p>
+      </div>
+
+      <button class="btn" id="continue-intake-btn">Continue where you left off</button>
+
+      <div class="user-info" style="margin-top: 32px; text-align: left; border-top: 1px solid var(--border); padding-top: 24px;">
+        <span class="email" id="continue-email"></span>
+        <a class="sign-out-link" id="sign-out-btn-continue">Sign out</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── INTAKE COMPLETE SCREEN ── -->
+  <div id="screen-intake-complete" class="screen">
+    <div class="card">
+      <div class="eyebrow">Complete</div>
+      <h1>Your Voice Is <em>Ready</em></h1>
+      <p class="subtitle">Your voice guide has been generated. You can now manage your website content and set up your Claude Project.</p>
+
+      <div id="complete-message" class="message"></div>
+
+      <button class="btn" id="go-to-update-btn">Manage your content</button>
+
+      <div class="user-info" style="margin-top: 32px; text-align: left; border-top: 1px solid var(--border); padding-top: 24px;">
+        <span class="email" id="complete-email"></span>
+        <a class="sign-out-link" id="sign-out-btn-complete">Sign out</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── UPDATE PAGE (existing) ── -->
+  <div id="screen-update" class="screen" style="align-items: flex-start; padding-top: 40px;">
+    <div class="card card-wide" style="max-width: 900px;">
+
+      <div class="dashboard-header">
+        <h1>Manage Your <em>Content</em></h1>
+        <div class="user-info">
+          <span class="email" id="update-email"></span>
+          <a class="sign-out-link" id="sign-out-btn-update">Sign out</a>
+        </div>
+      </div>
+
+      <!-- HERO SECTION -->
+      <div class="section-group">
+        <p class="section-group-title">Hero section</p>
+        <div class="field">
+          <label for="hero-title">Headline</label>
+          <input type="text" id="hero-title" placeholder="You already know something needs to change." />
+        </div>
+        <div class="field">
+          <label for="hero-subtitle">Subheadline</label>
+          <textarea id="hero-subtitle" placeholder="This is a space to slow down, look clearly, and find your way back to yourself."></textarea>
+        </div>
+      </div>
+
+      <!-- ABOUT SECTION -->
+      <div class="section-group">
+        <p class="section-group-title">About you</p>
+        <div class="field">
+          <label for="about-p1">Paragraph 1</label>
+          <textarea id="about-p1" placeholder="Start with who you are and what you do..."></textarea>
+        </div>
+        <div class="field">
+          <label for="about-p2">Paragraph 2</label>
+          <textarea id="about-p2" placeholder="Expand on your approach and what clients experience..."></textarea>
+        </div>
+        <div class="field">
+          <label for="about-quote">Pull quote</label>
+          <textarea id="about-quote" placeholder="Something you believe deeply, or something a client said that stayed with you."></textarea>
+          <p class="hint">This sits to one side of your text in a larger, italic font. One sentence is plenty.</p>
+        </div>
+      </div>
+
+      <!-- APPROACH -->
+      <div class="section-group">
+        <p class="section-group-title">Approach — your three pillars</p>
+        <div class="approach-editor" id="approach-editor">
+          <!-- Generated by JS -->
+        </div>
+      </div>
+
+      <!-- SERVICES -->
+      <div class="section-group">
+        <p class="section-group-title">Services</p>
+        <div id="services-editor">
+          <!-- Generated by JS -->
+        </div>
+      </div>
+
+      <!-- CONTACT -->
+      <div class="section-group">
+        <p class="section-group-title">Contact</p>
+        <div class="two-col" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <div class="field">
+            <label for="contact-email">Your email address</label>
+            <input type="text" id="contact-email" placeholder="hello@yourname.com" />
+          </div>
+          <div class="field">
+            <label for="contact-location">Your location</label>
+            <input type="text" id="contact-location" placeholder="Le Mans, France" />
+          </div>
+        </div>
+      </div>
+
+      <!-- SAVE BAR -->
+      <div class="save-bar" style="display: flex; justify-content: space-between; align-items: center; padding-top: 24px; border-top: 1px solid var(--border); gap: 16px;">
+        <button class="btn" id="save-btn" style="flex: 1;">Save changes</button>
+        <span class="save-status" id="save-status"></span>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script>
+    const { createClient } = supabase
+    const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+    let clientData = null
+    let contentData = null
+    let selectedPalette = 'grounded-honey'
+
+    // ── SCREENS ──
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'))
+      document.getElementById(id).classList.add('active')
+      window.scrollTo(0, 0)
+    }
+
+    function showMessage(containerId, type, text) {
+      const el = document.getElementById(containerId)
+      if (el) {
+        el.className = 'message ' + type + ' visible'
+        el.textContent = text
+      }
+    }
+
+    // ── INTAKE STATUS MAPPING ──
+    const intakeStages = {
+      'not_started': 0,
+      'palette_selected': 1,
+      'values_selected': 2,
+      'references_added': 3,
+      'samples_added': 4,
+      'completed': 5
+    }
+
+    const pageMap = {
+      'not_started': 'intake-page-1.html',
+      'palette_selected': 'intake-page-2.html',
+      'values_selected': 'intake-page-3.html',
+      'references_added': 'intake-page-4.html',
+      'samples_added': 'intake-page-5.html'
+    }
+
+    // ── MAGIC LINK LOGIN ──
+    document.getElementById('send-link-btn').addEventListener('click', async () => {
+      const email = document.getElementById('email-input').value.trim()
+      if (!email) { 
+        showMessage('login-message', 'error', 'Please enter your email address.')
+        return 
+      }
+
+      const btn = document.getElementById('send-link-btn')
+      btn.disabled = true
+      btn.textContent = 'Sending...'
+
+      const { error } = await db.auth.signInWithOtp({
+        email,
+        options: { emailRedirectTo: window.location.href }
+      })
+
+      if (error) {
+        showMessage('login-message', 'error', 'Something went wrong. Please try again.')
+        btn.disabled = false
+        btn.textContent = 'Send me my link'
+      } else {
+        showScreen('screen-check-email')
+      }
+    })
+
+    // ── BACK TO LOGIN ──
+    document.getElementById('back-to-login-btn').addEventListener('click', () => {
+      showScreen('screen-login')
+      document.getElementById('email-input').value = ''
+    })
+
+    // ── AUTH STATE ──
+    db.auth.onAuthStateChange(async (event, session) => {
+      if (session) {
+        await loadClientData(session.user.email)
+      }
+    })
+
+    // ── LOAD CLIENT DATA ──
+    async function loadClientData(email) {
+      showScreen('screen-loading')
+
+      const { data: client, error: clientError } = await db
+        .from('clients')
+        .select('*')
+        .eq('email', email)
+        .single()
+
+      if (clientError || !client) {
+        showScreen('screen-login')
+        showMessage('login-message', 'error', 'No account found for this email. Please contact your Techie TC.')
+        return
+      }
+
+      clientData = client
+      selectedPalette = client.palette || 'grounded-honey'
+
+      const { data: content } = await db
+        .from('client_content')
+        .select('*')
+        .eq('client_id', client.id)
+        .single()
+
+      contentData = content
+
+      // ── ROUTE BASED ON INTAKE STATUS ──
+      const status = client.intake_status || 'not_started'
+
+      if (status === 'not_started') {
+        populateStartIntake(email)
+        showScreen('screen-start-intake')
+      } else if (status === 'completed') {
+        populateForm()
+        showScreen('screen-update')
+      } else {
+        // In progress
+        populateContinueIntake(email, status)
+        showScreen('screen-continue-intake')
+      }
+    }
+
+    // ── START INTAKE SCREEN ──
+    function populateStartIntake(email) {
+      document.getElementById('start-email').textContent = email
+    }
+
+    document.getElementById('start-intake-btn').addEventListener('click', () => {
+      window.location.href = 'intake-page-1.html'
+    })
+
+    document.getElementById('sign-out-btn-start').addEventListener('click', async () => {
+      await db.auth.signOut()
+      showScreen('screen-login')
+    })
+
+    // ── CONTINUE INTAKE SCREEN ──
+    function populateContinueIntake(email, status) {
+      document.getElementById('continue-email').textContent = email
+
+      const currentStage = intakeStages[status] || 0
+      const progress = Math.min((currentStage / 5) * 100, 100)
+      document.getElementById('progress-fill').style.width = progress + '%'
+      document.getElementById('progress-text').textContent = `Section ${currentStage + 1} of 5`
+    }
+
+    document.getElementById('continue-intake-btn').addEventListener('click', () => {
+      const status = clientData.intake_status || 'not_started'
+      const nextPage = pageMap[status] || 'intake-page-1.html'
+      window.location.href = nextPage
+    })
+
+    document.getElementById('sign-out-btn-continue').addEventListener('click', async () => {
+      await db.auth.signOut()
+      showScreen('screen-login')
+    })
+
+    // ── INTAKE COMPLETE SCREEN ──
+    function populateIntakeComplete(email) {
+      document.getElementById('complete-email').textContent = email
+    }
+
+    document.getElementById('go-to-update-btn').addEventListener('click', () => {
+      showScreen('screen-update')
+    })
+
+    document.getElementById('sign-out-btn-complete').addEventListener('click', async () => {
+      await db.auth.signOut()
+      showScreen('screen-login')
+    })
+
+    // ── UPDATE PAGE (EXISTING FUNCTIONALITY) ──
+    function populateForm() {
+      document.getElementById('update-email').textContent = clientData.email
+
+      document.querySelectorAll('.palette-option').forEach(opt => {
+        opt.classList.toggle('selected', opt.dataset.palette === selectedPalette)
+      })
+
+      if (!contentData) return
+
+      setValue('hero-title', contentData.hero_title)
+      setValue('hero-subtitle', contentData.hero_subtitle)
+      setValue('about-p1', contentData.about_paragraph_1)
+      setValue('about-p2', contentData.about_paragraph_2)
+      setValue('about-quote', contentData.about_pull_quote)
+      setValue('contact-email', contentData.contact_email)
+      setValue('contact-location', contentData.contact_location)
+
+      buildApproachEditor(contentData.approach_items)
+      buildServicesEditor(contentData.services)
+    }
+
+    function setValue(id, value) {
+      const el = document.getElementById(id)
+      if (el && value) el.value = value
+    }
+
+    // ── APPROACH EDITOR ──
+    function buildApproachEditor(items) {
+      const container = document.getElementById('approach-editor')
+      container.innerHTML = ''
+      if (!items) return
+
+      items.forEach((item, i) => {
+        const html = `
+          <div class="approach-card-editor" style="border: 1px solid var(--border); border-radius: 4px; padding: 20px; background: var(--surface-2); margin-bottom: 16px;">
+            <p style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--primary); margin-bottom: 16px;">Pillar ${i + 1}</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 16px;">
+              <div class="field">
+                <label>Name</label>
+                <input type="text" id="approach-name-${i}" value="${item.name || ''}" />
+              </div>
+              <div class="field">
+                <label>Number label</label>
+                <input type="text" id="approach-number-${i}" value="${item.number || '0' + (i+1)}" />
+              </div>
+            </div>
+            <div class="field">
+              <label>Description</label>
+              <textarea id="approach-desc-${i}" style="min-height: 90px;">${item.desc || ''}</textarea>
+            </div>
+          </div>`
+        container.innerHTML += html
+      })
+    }
+
+    // ── SERVICES EDITOR ──
+    function buildServicesEditor(services) {
+      const container = document.getElementById('services-editor')
+      container.innerHTML = ''
+      if (!services) return
+
+      services.forEach((service, i) => {
+        const html = `
+          <div class="approach-card-editor" style="border: 1px solid var(--border); border-radius: 4px; padding: 20px; background: var(--surface-2); margin-bottom: 16px;">
+            <p style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--primary); margin-bottom: 16px;">Service ${i + 1}</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 16px;">
+              <div class="field">
+                <label>Service name</label>
+                <input type="text" id="service-name-${i}" value="${service.name || ''}" />
+              </div>
+              <div class="field">
+                <label>Price</label>
+                <input type="text" id="service-price-${i}" value="${service.price || ''}" />
+              </div>
+            </div>
+            <div class="field">
+              <label>Description</label>
+              <textarea id="service-desc-${i}" style="min-height: 90px;">${service.desc || ''}</textarea>
+            </div>
+          </div>`
+        container.innerHTML += html
+      })
+    }
+
+    // ── SAVE ──
+    document.getElementById('save-btn').addEventListener('click', async () => {
+      const btn = document.getElementById('save-btn')
+      const status = document.getElementById('save-status')
+
+      btn.disabled = true
+      btn.textContent = 'Saving...'
+      status.textContent = ''
+
+      const approachItems = (contentData?.approach_items || []).map((_, i) => ({
+        number: document.getElementById(`approach-number-${i}`)?.value || '',
+        name:   document.getElementById(`approach-name-${i}`)?.value || '',
+        desc:   document.getElementById(`approach-desc-${i}`)?.value || '',
+      }))
+
+      const services = (contentData?.services || []).map((_, i) => ({
+        name:  document.getElementById(`service-name-${i}`)?.value || '',
+        price: document.getElementById(`service-price-${i}`)?.value || '',
+        desc:  document.getElementById(`service-desc-${i}`)?.value || '',
+      }))
+
+      const { error } = await db.from('client_content').update({
+        hero_title:        document.getElementById('hero-title').value,
+        hero_subtitle:     document.getElementById('hero-subtitle').value,
+        about_paragraph_1: document.getElementById('about-p1').value,
+        about_paragraph_2: document.getElementById('about-p2').value,
+        about_pull_quote:  document.getElementById('about-quote').value,
+        contact_email:     document.getElementById('contact-email').value,
+        contact_location:  document.getElementById('contact-location').value,
+        approach_items:    approachItems,
+        services:          services,
+        updated_at:        new Date().toISOString(),
+      }).eq('client_id', clientData.id)
+
+      btn.disabled = false
+      btn.textContent = 'Save changes'
+
+      if (error) {
+        status.textContent = 'Something went wrong. Please try again.'
+        status.style.color = 'var(--error)'
+      } else {
+        status.textContent = 'Saved. Your page is updated.'
+        status.style.color = 'var(--success)'
+        setTimeout(() => status.textContent = '', 4000)
+      }
+    })
+
+    // ── SIGN OUT (UPDATE PAGE) ──
+    document.getElementById('sign-out-btn-update').addEventListener('click', async () => {
+      await db.auth.signOut()
+      showScreen('screen-login')
+    })
+
+  </script>
+
+</body>
+</html>
