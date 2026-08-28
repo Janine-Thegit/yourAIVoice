@@ -595,8 +595,9 @@
   <!-- SUPABASE & LOGIC -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js"></script>
-
+    
   <script>
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
     const palettes = [
       { 
         id: 'grounded-honey', 
@@ -704,27 +705,115 @@
       document.getElementById('about-you-bg').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
+        // ── INITIALIZE SUPABASE & AUTH ──
+    const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    let currentClientId = null;
+
+    // Check auth on page load
+    (async function initAuth() {
+      const { data: { session } } = await db.auth.getSession();
+      
+      if (!session) {
+        window.location.href = '/yourAIVoice/';
+        return;
+      }
+      
+      const { data: client } = await db
+        .from('clients')
+        .select('id')
+        .eq('email', session.user.email)
+        .single();
+      
+      if (!client) {
+        alert('Error loading your account.');
+        window.location.href = '/yourAIVoice/';
+        return;
+      }
+      
+      currentClientId = client.id;
+    })();
+
     // Form submission
     document.getElementById('intake-form').addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const palette = document.getElementById('selected-palette').value;
 
-      // Validate
       if (!palette) {
         alert('Please choose a palette to continue.');
         return;
       }
 
-      // TODO: Save to Supabase
-      console.log({
-        palette
-      });
+      if (!currentClientId) {
+        alert('Error: Could not load your account. Please refresh.');
+        return;
+      }
 
-      // Redirect to next stage (suitcase exercise)
-      // window.location.href = 'intake-suitcase.html';
-      alert('✓ Saved! Next: values suitcase exercise.');
-    });
+      const continueBtn = document.getElementById('continue-btn-bottom');
+      const originalText = continueBtn.textContent;
+      continueBtn.disabled = true;
+      continueBtn.textContent = 'Generating your voice...';
+
+      try {
+        // Call Edge Function to generate About
+        const generateResponse = await fetch(
+          'https://wubukfrhdgexbppqanaw.supabase.co/functions/v1/generate-about',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${(await db.auth.getSession()).data.session.access_token}`
+            },
+            body: JSON.stringify({
+              client_id: currentClientId,
+              palette_choice: palette
+            })
+          }
+        );
+
+        if (!generateResponse.ok) {
+          const error = await generateResponse.json();
+          throw new Error(error.error || 'Failed to generate voice');
+        }
+
+        // Update Supabase with palette and intake_status
+        await db
+          .from('clients')
+          .update({
+            palette: palette,
+            intake_status: 'palette_selected'
+          })
+          .eq('id', currentClientId);
+
+        // Redirect to next page
+        window.location.href = 'intake-page-2.html';
+
+      } catch (error) {
+        console.error('Error:', error);
+        continueBtn.disabled = false;
+        continueBtn.textContent = originalText;
+        
+        // Show error message
+        const errorDiv = document.createElement('div');
+        errorDiv.style.cssText = `
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: rgba(196, 137, 122, 0.12);
+          border: 1px solid #C4897A;
+          color: var(--text);
+          padding: 16px 20px;
+          border-radius: 4px;
+          font-size: 14px;
+          max-width: 400px;
+          z-index: 9999;
+        `;
+        errorDiv.textContent = 'Something went wrong. Please try again later.';
+        document.body.appendChild(errorDiv);
+        
+        setTimeout(() => errorDiv.remove(), 5000);
+      }
+    });   
   </script>
 
 </body>
