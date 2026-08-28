@@ -514,6 +514,8 @@
       }
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
 </head>
 <body class="palette-grounded-honey">
 
@@ -597,7 +599,7 @@
   <script src="config.js"></script>
     
   <script>
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+    const { createClient } = supabase;
     const palettes = [
       { 
         id: 'grounded-honey', 
