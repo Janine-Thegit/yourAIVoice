@@ -550,10 +550,7 @@
 
           <input type="hidden" id="selected-palette" name="palette" required>
 
-          <!-- BUTTON GROUP -->
-          <div class="btn-group" id="submit-button-group" style="margin-top: 0; opacity: 0.4; pointer-events: none;">
-            <button type="submit" class="btn" id="continue-btn" disabled>Continue to values</button>
-          </div>
+
         </form>
       </div>
 
@@ -581,7 +578,7 @@
 
       <!-- CONTINUE TO VALUES BUTTON -->
       <div style="text-align: center; padding: 16px 0;">
-        <button type="button" onclick="document.getElementById('intake-form').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));" class="btn" id="continue-btn-bottom" disabled style="opacity: 0.4; cursor: not-allowed;">Continue to values</button>
+        <button type="button" onclick="document.getElementById('intake-form').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));" class="btn" id="continue-btn-bottom" disabled style="opacity: 0.4; cursor: not-allowed;">Save palette and continue to values</button>
       </div>
     </section>
 
