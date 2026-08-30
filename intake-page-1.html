@@ -782,16 +782,13 @@
         }
 
         // Update Supabase with palette and intake_status
-const { data: updateData, error: updateError } = await db
-  .from('clients')
-  .update({
-    palette: palette,
-    intake_status: 'palette_selected'
-  })
-  .eq('id', currentClientId);
-
-console.log('Update result:', updateData);
-console.log('Update error:', updateError);
+      const { data: updateData, error: updateError } = await db
+     .from('clients')
+      .update({
+        palette: palette,
+        intake_status: 'palette_selected'
+      })
+    .eq('id', currentClientId);
 
         // Redirect to next page
         window.location.href = 'intake-page-2.html';
