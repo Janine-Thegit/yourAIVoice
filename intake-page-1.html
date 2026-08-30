@@ -756,6 +756,9 @@
       continueBtn.disabled = true;
       continueBtn.textContent = 'Generating your voice...';
 
+      console.log('currentClientId:', currentClientId);
+      console.log('palette:', palette);
+      
       try {
         // Call Edge Function to generate About
         const generateResponse = await fetch(
