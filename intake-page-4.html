@@ -133,6 +133,15 @@
         <textarea id="other_references" placeholder="Anything that doesn't fit the categories above…" rows="3"></textarea>
       </div>
 
+      <hr class="field-divider" />
+
+      <div class="reference-section">
+        <p class="reference-label">Your dream client</p>
+        <p class="reference-cue">[pauses, leans forward] Who do you most want to be sitting across from? What are they carrying when they find you?</p>
+        <div class="reference-example"><em>Example: "Someone who's held it together for everyone else for years and has finally run out of road. High-functioning on the outside, quietly lost on the inside. Often mid-career, often a woman, often someone who suspects the problem isn't what they thought it was."</em></div>
+        <textarea id="dream_client" placeholder="Describe them as specifically as you can — the person you light up for…" rows="4"></textarea>
+      </div>
+
       <div class="submit-section" id="submit-section">
         <p>[pauses] Share what feels right. Nothing needs to be complete.</p>
         <button class="btn" id="submit-btn" onclick="submitReferences()">Weave this into my voice →</button>
@@ -189,6 +198,7 @@
         film_television:       document.getElementById('film_television').value.trim(),
         practices_disciplines: document.getElementById('practices_disciplines').value.trim(),
         other_references:      document.getElementById('other_references').value.trim(),
+        dream_client:          document.getElementById('dream_client').value.trim(),
       };
       if (!Object.values(fields).some(v => v.length > 0)) {
         alert('Share something — even one field. The more you give, the richer the result.');
