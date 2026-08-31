@@ -418,12 +418,7 @@ I'll read it and tell you what I notice about how you actually sound. Then we'll
       const parts = [s1, s2, s3].filter(Boolean);
       const combined = parts.length === 1
         ? parts[0]
-        : parts.map((p, i) => `[Sample ${i + 1}]
-${p}`).join('
-
----
-
-');
+        : parts.map((p, i) => '[Sample ' + (i + 1) + ']\n' + p).join('\n\n---\n\n');
 
       document.getElementById('samples-btn').disabled = true;
 
