@@ -602,64 +602,29 @@
       document.getElementById('analysis-loading').style.display = 'block';
 
       try {
-        const systemPrompt = `You are analyzing five answers to identify a coach's distinctive voice patterns and authentic convictions. Your job is NOT to create a summary. Your job is to notice HOW they speak when they're being honest.
+        const { data: { session } } = await db.auth.getSession();
 
-Read all five answers and look for:
-
-1. LANGUAGE PATTERNS
-   - What metaphors or images do they naturally reach for?
-   - How do they speak when they care deeply?
-   - What language shows up repeatedly?
-
-2. CONVICTION MARKERS
-   - How do they express what they believe?
-   - Where's the fire? Where's the restraint?
-
-3. AUTHENTICITY TELLS
-   - What sounds like them, not like coaching-speak?
-   - Where do they use specific detail vs. abstraction?
-
-4. DISTINCTIVE THINKING
-   - What's unique about HOW they see the world?
-   - What contradictions do they hold (and hold well)?
-
-Then write 3-4 sentences that name their patterns. Make it something they would recognise about themselves. Write it in second person ("You..."), not as observation from outside.
-
-Example output:
-"You speak with fierce specificity — not abstractions, but concrete detail. When you're authentic, you name hard things directly without euphemizing. You hold complexity without collapsing it. Your conviction about justice and integrity shows up as non-negotiable ground — you stand solid so your work can be honest."
-
-Write only the 3-4 sentences. No preamble, no labels, no headings.`;
-
-        const userPrompt = `Here are the five answers:
-
-1. What's an unusual, even weird, value you hold?
-"${answers[0]}"
-
-2. What do you give a damn about?
-"${answers[1]}"
-
-3. What makes you angriest?
-"${answers[2]}"
-
-4. If you had an extra million dollars, what would you do with it?
-"${answers[3]}"
-
-5. If you could have one life do-over, what would you change?
-"${answers[4]}"`;
-
-        const response = await fetch('https://api.anthropic.com/v1/messages', {
+        const response = await fetch('https://wubukfrhdgexbppqanaw.supabase.co/functions/v1/generate-patterns', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.access_token}`
+          },
           body: JSON.stringify({
-            model: 'claude-sonnet-4-6',
-            max_tokens: 400,
-            system: systemPrompt,
-            messages: [{ role: 'user', content: userPrompt }]
+            client_id: currentClientId,
+            unusual_value: answers[0],
+            give_damn_about: answers[1],
+            makes_angry: answers[2],
+            million_dollars: answers[3],
+            life_doover: answers[4]
           })
         });
 
         const data = await response.json();
-        distinctivePatterns = data.content?.[0]?.text?.trim() || '';
+
+        if (!data.success) throw new Error(data.error || 'Function failed');
+
+        distinctivePatterns = data.distinctive_patterns || '';
 
         document.getElementById('analysis-loading').style.display = 'none';
         document.getElementById('patterns-text').textContent = distinctivePatterns;
@@ -685,35 +650,8 @@ Write only the 3-4 sentences. No preamble, no labels, no headings.`;
     }
 
     async function saveAndContinue() {
-      document.getElementById('confirm-btn').disabled = true;
-      document.getElementById('confirm-btn').textContent = 'Saving…';
-
-      try {
-        // Save answers + patterns to intake_responses
-        await db.from('intake_responses').upsert({
-          client_id: currentClientId,
-          unusual_value: answers[0],
-          give_damn_about: answers[1],
-          makes_angry: answers[2],
-          million_dollars: answers[3],
-          life_doover: answers[4],
-          distinctive_patterns: distinctivePatterns,
-          submitted_at: new Date().toISOString()
-        }, { onConflict: 'client_id' });
-
-        // Update intake_status
-        await db.from('clients')
-          .update({ intake_status: 'references_added' })
-          .eq('id', currentClientId);
-
-        window.location.href = 'intake-page-4.html';
-
-      } catch (err) {
-        console.error('Save error:', err);
-        document.getElementById('confirm-btn').disabled = false;
-        document.getElementById('confirm-btn').textContent = 'Yes — save and continue';
-        alert('Something went wrong saving your answers. Please try again.');
-      }
+      // Edge Function already saved everything — just redirect
+      window.location.href = 'intake-page-4.html';
     }
 
     init();
