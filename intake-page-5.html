@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Build Your Voice | Techie TC</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root { --primary:#B8924A; --neutral:#F5EFE0; --text:#221A10; --hero-img:none; --overlay:rgba(34,26,16,0.52); }
+    .palette-grounded-honey   { --primary:#B8924A; --neutral:#F5EFE0; --text:#221A10; --hero-img:url('groundedHoney.png');   --overlay:rgba(34,26,16,0.52); }
+    .palette-calm-moss        { --primary:#7A9E87; --neutral:#F4F6F2; --text:#2C3E30; --hero-img:url('calmMoss.png');         --overlay:rgba(44,62,48,0.54); }
+    .palette-held-embers      { --primary:#C4897A; --neutral:#FAF0ED; --text:#3A2E2E; --hero-img:url('heldEmbers.png');       --overlay:rgba(58,46,46,0.50); }
+    .palette-focus-form       { --primary:#4A6FA5; --neutral:#F4F6F8; --text:#1C2B3A; --hero-img:url('focus_Form.png');       --overlay:rgba(28,43,58,0.55); }
+    .palette-clean-considered { --primary:#5C5C5C; --neutral:#F2F2F0; --text:#1A1A1A; --hero-img:url('clean_Considered.png'); --overlay:rgba(26,26,26,0.52); }
+    .palette-embodied         { --primary:#6B7C45; --neutral:#F0EAD6; --text:#2A2018; --hero-img:url('embodied.png');         --overlay:rgba(42,32,24,0.58); }
+    .palette-between-beyond   { --primary:#7B6B9E; --neutral:#F2EFF8; --text:#2E1F3A; --hero-img:url('between_Beyond.png');   --overlay:rgba(46,31,58,0.50); }
+
+    body {
+      --text-soft:      color-mix(in srgb, var(--text) 55%, var(--neutral));
+      --border:         color-mix(in srgb, var(--text) 12%, var(--neutral));
+      --surface-1:      color-mix(in srgb, var(--text) 5%, var(--neutral));
+      --text-primary:   var(--text);
+      --text-secondary: var(--text-soft);
+      --fill-accent:    var(--primary);
+      --on-accent:      var(--neutral);
+      --border-strong:  color-mix(in srgb, var(--text) 30%, var(--neutral));
+      --radius: 8px;
+    }
+
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    html { scroll-behavior:smooth; }
+    body { background-color:var(--neutral); color:var(--text); font-family:'Inter',sans-serif; font-weight:300; font-size:17px; line-height:1.75; }
+
+    .container { max-width:780px; margin:0 auto; padding:0 24px; }
+
+    /* ── HEADER ── */
+    header { padding:32px 0 24px; border-bottom:1px solid var(--border); margin-bottom:40px; }
+    .section-label { font-size:13px; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-secondary); margin-bottom:8px; }
+    .progress-bar { height:3px; background:var(--border); margin-bottom:32px; border-radius:2px; overflow:hidden; }
+    .progress-fill { height:100%; background:var(--primary); transition:width 0.4s ease; }
+
+    /* ── ABOUT HERO ── */
+    #about-bg { position:relative; background-image:var(--hero-img); background-size:cover; background-position:center; margin-bottom:48px; }
+    #about-bg::before { content:''; position:absolute; inset:0; background:var(--overlay); }
+    .about-content { position:relative; z-index:1; padding:56px 48px; max-width:780px; margin:0 auto; }
+    #about-bg .section-label { color:rgba(255,255,255,0.7); }
+    .about-text { color:rgba(255,255,255,0.92); font-size:16px; line-height:1.85; white-space:pre-line; }
+
+    /* ── CHAT CONTAINER ── */
+    .chat-container { max-width:780px; margin:0 auto; padding:0 24px 80px; }
+
+    /* ── MESSAGES ── */
+    .messages { display:flex; flex-direction:column; gap:20px; margin-bottom:32px; }
+
+    .message { display:flex; flex-direction:column; gap:6px; }
+
+    /* Claude messages */
+    .message-claude .bubble {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: 14px 14px 14px 4px;
+      padding: 20px 24px;
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--text);
+      white-space: pre-wrap;
+    }
+
+    .message-claude .sender {
+      font-size: 12px;
+      color: var(--text-secondary);
+      padding-left: 4px;
+    }
+
+    /* Presence cues inside Claude messages */
+    .presence { font-style:italic; color:var(--text-secondary); }
+
+    /* Coach messages */
+    .message-coach { align-items: flex-end; }
+
+    .message-coach .bubble {
+      background: color-mix(in srgb, var(--primary) 12%, var(--neutral));
+      border: 1px solid color-mix(in srgb, var(--primary) 30%, var(--neutral));
+      border-radius: 14px 14px 4px 14px;
+      padding: 16px 20px;
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--text);
+      max-width: 88%;
+      white-space: pre-wrap;
+    }
+
+    .message-coach .sender {
+      font-size: 12px;
+      color: var(--text-secondary);
+      padding-right: 4px;
+      text-align: right;
+    }
+
+    /* Loading bubble */
+    .message-loading .bubble {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: 14px 14px 14px 4px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .loading-dots { display:flex; gap:5px; align-items:center; }
+    .loading-dots span { width:6px; height:6px; border-radius:50%; background:var(--primary); animation:pulse 1.2s ease-in-out infinite; }
+    .loading-dots span:nth-child(2) { animation-delay:0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay:0.4s; }
+    @keyframes pulse { 0%,100%{opacity:0.3;transform:scale(0.9)} 50%{opacity:1;transform:scale(1.1)} }
+
+    /* ── INPUT AREA ── */
+    .input-area {
+      position: sticky;
+      bottom: 0;
+      background: var(--neutral);
+      border-top: 1px solid var(--border);
+      padding: 20px 24px;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+    }
+
+    .input-wrap { flex: 1; }
+
+    textarea#coach-input {
+      width: 100%;
+      min-height: 72px;
+      max-height: 200px;
+      padding: 14px 16px;
+      background: var(--neutral);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--text);
+      line-height: 1.6;
+      resize: none;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    textarea#coach-input:focus { border-color: var(--primary); }
+    textarea#coach-input::placeholder { color: var(--text-secondary); }
+
+    .send-btn {
+      padding: 14px 20px;
+      background: var(--fill-accent);
+      color: var(--on-accent);
+      border: none;
+      border-radius: var(--radius);
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: opacity 0.15s ease;
+      white-space: nowrap;
+      align-self: flex-end;
+    }
+
+    .send-btn:hover { opacity: 0.88; }
+    .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ── FINAL ABOUT CARD ── */
+    .final-about-card {
+      display: none;
+      background: color-mix(in srgb, var(--primary) 8%, var(--neutral));
+      border: 1px solid color-mix(in srgb, var(--primary) 30%, var(--neutral));
+      border-radius: 14px;
+      padding: 32px 36px;
+      margin: 24px 0;
+    }
+
+    .final-about-card h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 400;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+    }
+
+    .final-about-text {
+      font-size: 16px;
+      line-height: 1.85;
+      color: var(--text);
+      white-space: pre-wrap;
+      margin-bottom: 24px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 14px 28px;
+      background: var(--fill-accent);
+      color: var(--on-accent);
+      border: none;
+      border-radius: var(--radius);
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+    }
+
+    .btn:hover { opacity:0.88; transform:translateY(-1px); }
+    .btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
+    .btn-outline { background:transparent; color:var(--text-secondary); border:1px solid var(--border-strong); margin-left:12px; }
+
+    footer { padding:32px 0; border-top:1px solid var(--border); margin-top:40px; font-size:13px; color:var(--text-secondary); text-align:center; }
+
+    @media(max-width:640px) {
+      .about-content { padding:40px 20px; }
+      .message-coach .bubble { max-width:95%; }
+      .input-area { padding:16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div>
+      <p class="section-label">Step 5 of 5</p>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:400;line-height:1.2;">Your real <em>voice.</em></h2>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ABOUT HERO -->
+    <div id="about-bg">
+      <div class="about-content">
+        <p class="section-label">Your About — four layers deep</p>
+        <div class="about-text" id="about-text">Loading…</div>
+      </div>
+    </div>
+
+    <!-- CONVERSATION -->
+    <div class="chat-container">
+      <div class="messages" id="messages"></div>
+
+      <!-- FINAL ABOUT CARD (shown when dialogue completes) -->
+      <div class="final-about-card" id="final-about-card">
+        <h3>Your About — refined</h3>
+        <div class="final-about-text" id="final-about-text"></div>
+        <button class="btn" id="complete-btn" onclick="completeIntake()">Complete my voice guide →</button>
+        <button class="btn btn-outline" onclick="continueDialogue()">Keep refining</button>
+      </div>
+
+      <!-- INPUT -->
+      <div class="input-area" id="input-area">
+        <div class="input-row">
+          <div class="input-wrap">
+            <textarea id="coach-input" placeholder="Paste some writing here — a newsletter, an email, something from your website. Anything that sounds like you right now…" rows="3"></textarea>
+          </div>
+          <button class="send-btn" id="send-btn" onclick="sendMessage()">Send →</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <div class="container"><p>Techie TC · Building your voice, step by step</p></div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script>
+    const { createClient } = supabase;
+    const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let currentClientId = null;
+    let currentAbout = '';
+    let conversationHistory = [];
+    let messageCount = 0;
+    let session = null;
+
+    const SYSTEM_PROMPT = `You are a warm, perceptive writing coach helping a therapeutic coach refine their About section by comparing it to their actual writing voice.
+
+You have access to their current About section (provided below). When they share writing samples, your job is to:
+
+1. Read carefully and notice specific voice patterns — not generic praise
+2. Compare to the About section honestly
+3. Name the gap if there is one, and ask one clarifying question
+4. Listen to their response and adjust your thinking
+5. When the dialogue feels complete, offer a refined About section that better reflects their real voice
+
+TONE:
+- Use [bracketed presence cues] naturally: [reads through], [pauses], [sits back], [nods]
+- Be specific. Quote their actual phrases when you notice something
+- Curious, not prescriptive. Their call on what to keep or change
+- Warm but honest. If their About sounds more formal than their writing, name it
+- Know when to close. After 3-4 exchanges, offer to finalize
+
+WHEN OFFERING A FINAL ABOUT:
+Signal clearly that you're done with the dialogue. End your message with exactly this marker on its own line:
+---FINAL_ABOUT---
+[the refined About text here]
+
+Only use this marker when you're genuinely ready to finalize — not speculatively.
+
+CURRENT ABOUT SECTION:
+{{ABOUT}}`;
+
+    // ── INIT ──
+    async function init() {
+      const { data: { session: s } } = await db.auth.getSession();
+      if (!s) { window.location.href = '/yourAIVoice/'; return; }
+      session = s;
+
+      const { data: client } = await db.from('clients').select('id, palette').eq('email', s.user.email).single();
+      if (!client) { window.location.href = '/yourAIVoice/'; return; }
+
+      currentClientId = client.id;
+      document.body.classList.add('palette-' + (client.palette || 'grounded-honey'));
+
+      const { data: content } = await db.from('client_content').select('about_paragraph_1').eq('client_id', client.id).single();
+      currentAbout = content?.about_paragraph_1 || '';
+      document.getElementById('about-text').textContent = currentAbout || 'Your about section will appear here.';
+
+      // Opening message from Claude
+      addClaudeMessage(`[settles in]
+
+You've built your About section through palette, values, your distinctive patterns, and what shapes how you think. Now let's ground it in reality.
+
+Share some existing content you've written. A newsletter piece. An email to a client. Something from your website or a social post. Anything that feels like you right now. It doesn't need to be polished — it just needs to be real.
+
+I'll read it and tell you what I notice about how you actually sound. Then we'll compare that to your current About and see if they're talking to each other.`);
+    }
+
+    // ── UI HELPERS ──
+    function addClaudeMessage(text) {
+      const messages = document.getElementById('messages');
+      const div = document.createElement('div');
+      div.className = 'message message-claude';
+      // Format presence cues
+      const formatted = text.replace(/\[([^\]]+)\]/g, '<span class="presence">[$1]</span>');
+      div.innerHTML = `<div class="sender">Your voice guide</div><div class="bubble">${formatted}</div>`;
+      messages.appendChild(div);
+      div.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+
+    function addCoachMessage(text) {
+      const messages = document.getElementById('messages');
+      const div = document.createElement('div');
+      div.className = 'message message-coach';
+      div.innerHTML = `<div class="bubble">${escapeHtml(text)}</div><div class="sender">You</div>`;
+      messages.appendChild(div);
+      div.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+
+    function addLoadingMessage() {
+      const messages = document.getElementById('messages');
+      const div = document.createElement('div');
+      div.className = 'message message-loading';
+      div.id = 'loading-msg';
+      div.innerHTML = `<div class="bubble"><div class="loading-dots"><span></span><span></span><span></span></div></div>`;
+      messages.appendChild(div);
+      div.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      return div;
+    }
+
+    function removeLoadingMessage() {
+      const el = document.getElementById('loading-msg');
+      if (el) el.remove();
+    }
+
+    function escapeHtml(text) {
+      return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+    }
+
+    // ── SEND MESSAGE ──
+    async function sendMessage() {
+      const input = document.getElementById('coach-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const sendBtn = document.getElementById('send-btn');
+      sendBtn.disabled = true;
+      input.value = '';
+      input.style.height = 'auto';
+
+      addCoachMessage(text);
+      conversationHistory.push({ role: 'user', content: text });
+      messageCount++;
+
+      const loading = addLoadingMessage();
+
+      try {
+        const systemPrompt = SYSTEM_PROMPT.replace('{{ABOUT}}', currentAbout);
+
+        const { data: { session: s } } = await db.auth.getSession();
+
+        const response = await fetch('https://wubukfrhdgexbppqanaw.supabase.co/functions/v1/generate-samples-dialogue', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${s.access_token}`
+          },
+          body: JSON.stringify({
+            client_id: currentClientId,
+            system_prompt: systemPrompt,
+            messages: conversationHistory,
+            message_count: messageCount
+          })
+        });
+
+        const data = await response.json();
+        if (!data.success) throw new Error(data.error || 'Function failed');
+
+        const reply = data.reply || '';
+        removeLoadingMessage();
+
+        // Check for final About marker
+        if (reply.includes('---FINAL_ABOUT---')) {
+          const parts = reply.split('---FINAL_ABOUT---');
+          const dialoguePart = parts[0].trim();
+          const finalAbout = parts[1]?.trim() || '';
+
+          if (dialoguePart) addClaudeMessage(dialoguePart);
+          conversationHistory.push({ role: 'assistant', content: reply });
+
+          if (finalAbout) {
+            showFinalAbout(finalAbout);
+          }
+        } else {
+          addClaudeMessage(reply);
+          conversationHistory.push({ role: 'assistant', content: reply });
+        }
+
+      } catch (err) {
+        console.error('Send error:', err);
+        removeLoadingMessage();
+        addClaudeMessage('[pauses]\n\nSomething went wrong. Please try sending that again.');
+      }
+
+      sendBtn.disabled = false;
+      input.focus();
+    }
+
+    function showFinalAbout(aboutText) {
+      document.getElementById('final-about-text').textContent = aboutText;
+      document.getElementById('final-about-card').style.display = 'block';
+      document.getElementById('final-about-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      // Store the refined about for saving
+      window._finalAbout = aboutText;
+    }
+
+    function continueDialogue() {
+      document.getElementById('final-about-card').style.display = 'none';
+      document.getElementById('coach-input').focus();
+    }
+
+    async function completeIntake() {
+      const btn = document.getElementById('complete-btn');
+      btn.disabled = true;
+      btn.textContent = 'Saving…';
+
+      try {
+        const { data: { session: s } } = await db.auth.getSession();
+
+        await fetch('https://wubukfrhdgexbppqanaw.supabase.co/functions/v1/complete-intake', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${s.access_token}`
+          },
+          body: JSON.stringify({
+            client_id: currentClientId,
+            final_about: window._finalAbout || currentAbout
+          })
+        });
+
+        window.location.href = 'intake-complete.html';
+
+      } catch (err) {
+        console.error('Complete error:', err);
+        btn.disabled = false;
+        btn.textContent = 'Complete my voice guide →';
+        alert('Something went wrong. Please try again.');
+      }
+    }
+
+    // Auto-resize textarea
+    document.addEventListener('DOMContentLoaded', () => {
+      const ta = document.getElementById('coach-input');
+      ta.addEventListener('input', () => {
+        ta.style.height = 'auto';
+        ta.style.height = Math.min(ta.scrollHeight, 200) + 'px';
+      });
+      ta.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) sendMessage();
+      });
+    });
+
+    init();
+  </script>
+</body>
+</html>
