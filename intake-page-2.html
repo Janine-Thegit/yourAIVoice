@@ -896,6 +896,18 @@
 
         if (contentError) throw contentError;
 
+        // Rewrite About with values layered in
+        btn.textContent = 'Building your voice…';
+        const { data: { session } } = await db.auth.getSession();
+        await fetch('https://wubukfrhdgexbppqanaw.supabase.co/functions/v1/generate-about-values', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.access_token}`
+          },
+          body: JSON.stringify({ client_id: currentClientId })
+        });
+
         // Redirect to page 3
         window.location.href = 'intake-page-3.html';
 
