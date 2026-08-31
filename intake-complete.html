@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Voice Guide | Techie TC</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root { --primary:#B8924A; --neutral:#F5EFE0; --text:#221A10; --hero-img:none; --overlay:rgba(34,26,16,0.52); }
+    .palette-grounded-honey   { --primary:#B8924A; --neutral:#F5EFE0; --text:#221A10; --hero-img:url('groundedHoney.png');   --overlay:rgba(34,26,16,0.52); }
+    .palette-calm-moss        { --primary:#7A9E87; --neutral:#F4F6F2; --text:#2C3E30; --hero-img:url('calmMoss.png');         --overlay:rgba(44,62,48,0.54); }
+    .palette-held-embers      { --primary:#C4897A; --neutral:#FAF0ED; --text:#3A2E2E; --hero-img:url('heldEmbers.png');       --overlay:rgba(58,46,46,0.50); }
+    .palette-focus-form       { --primary:#4A6FA5; --neutral:#F4F6F8; --text:#1C2B3A; --hero-img:url('focus_Form.png');       --overlay:rgba(28,43,58,0.55); }
+    .palette-clean-considered { --primary:#5C5C5C; --neutral:#F2F2F0; --text:#1A1A1A; --hero-img:url('clean_Considered.png'); --overlay:rgba(26,26,26,0.52); }
+    .palette-embodied         { --primary:#6B7C45; --neutral:#F0EAD6; --text:#2A2018; --hero-img:url('embodied.png');         --overlay:rgba(42,32,24,0.58); }
+    .palette-between-beyond   { --primary:#7B6B9E; --neutral:#F2EFF8; --text:#2E1F3A; --hero-img:url('between_Beyond.png');   --overlay:rgba(46,31,58,0.50); }
+
+    body {
+      --text-soft:      color-mix(in srgb, var(--text) 55%, var(--neutral));
+      --border:         color-mix(in srgb, var(--text) 12%, var(--neutral));
+      --surface-1:      color-mix(in srgb, var(--text) 5%, var(--neutral));
+      --text-primary:   var(--text);
+      --text-secondary: var(--text-soft);
+      --fill-accent:    var(--primary);
+      --on-accent:      var(--neutral);
+      --border-strong:  color-mix(in srgb, var(--text) 30%, var(--neutral));
+      --radius: 8px;
+    }
+
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    html { scroll-behavior:smooth; }
+    body { background-color:var(--neutral); color:var(--text); font-family:'Inter',sans-serif; font-weight:300; font-size:17px; line-height:1.75; }
+    .container { max-width:780px; margin:0 auto; padding:0 24px; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      background-image: var(--hero-img);
+      background-size: cover;
+      background-position: center;
+      margin-bottom: 56px;
+    }
+    .hero::before { content:''; position:absolute; inset:0; background:var(--overlay); }
+    .hero-content { position:relative; z-index:1; padding:72px 48px 56px; max-width:780px; margin:0 auto; }
+    .hero-label { font-size:13px; text-transform:uppercase; letter-spacing:0.08em; color:rgba(255,255,255,0.6); margin-bottom:16px; }
+    .hero-title { font-family:'Cormorant Garamond',serif; font-size:42px; font-weight:400; color:#fff; line-height:1.15; margin-bottom:16px; }
+    .hero-title em { font-style:italic; }
+    .hero-sub { color:rgba(255,255,255,0.8); font-size:16px; max-width:520px; }
+
+    /* ── SECTION LABELS ── */
+    .section-label { font-size:13px; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-secondary); margin-bottom:8px; }
+
+    /* ── JOURNEY SECTION ── */
+    .journey-section { margin-bottom:72px; }
+    .journey-section h2 { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:400; color:var(--text-primary); margin-bottom:8px; }
+    .journey-section .lead { color:var(--text-secondary); font-size:15px; margin-bottom:36px; }
+
+    .about-stages { display:flex; flex-direction:column; gap:0; }
+
+    .stage {
+      position: relative;
+      padding: 32px 36px;
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+    }
+    .stage:first-child { border-radius: 14px 14px 0 0; }
+    .stage:last-child  { border-radius: 0 0 14px 14px; }
+    .stage + .stage    { border-top: none; }
+
+    /* Connector line between stages */
+    .stage-connector {
+      width: 2px;
+      height: 24px;
+      background: color-mix(in srgb, var(--primary) 40%, var(--neutral));
+      margin: 0 0 0 52px;
+    }
+
+    .stage-header { display:flex; align-items:center; gap:14px; margin-bottom:16px; }
+    .stage-number {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: color-mix(in srgb, var(--primary) 15%, var(--neutral));
+      border: 1px solid color-mix(in srgb, var(--primary) 40%, var(--neutral));
+      display: flex; align-items:center; justify-content:center;
+      font-size: 13px; font-weight: 600; color: var(--primary);
+      flex-shrink: 0;
+    }
+    .stage-name { font-size:13px; text-transform:uppercase; letter-spacing:0.07em; color:var(--text-secondary); }
+    .stage-about { font-size:16px; line-height:1.85; color:var(--text); white-space:pre-line; font-style:italic; }
+    .stage-about.final { font-style:normal; font-weight:400; }
+
+    /* Final stage highlight */
+    .stage.is-final {
+      background: color-mix(in srgb, var(--primary) 8%, var(--neutral));
+      border-color: color-mix(in srgb, var(--primary) 35%, var(--neutral));
+    }
+    .stage.is-final .stage-number {
+      background: var(--primary);
+      color: var(--neutral);
+      border-color: var(--primary);
+    }
+
+    /* ── VOICE GUIDE SECTION ── */
+    .guide-section { margin-bottom:72px; }
+    .guide-section h2 { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:400; color:var(--text-primary); margin-bottom:8px; }
+    .guide-section .lead { color:var(--text-secondary); font-size:15px; margin-bottom:36px; }
+
+    .guide-card {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .guide-card-header {
+      padding: 20px 28px;
+      background: color-mix(in srgb, var(--primary) 10%, var(--neutral));
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .guide-card-header span { font-size:13px; color:var(--text-secondary); }
+
+    .guide-text {
+      padding: 28px;
+      font-family: 'Inter', monospace;
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--text);
+      white-space: pre-wrap;
+      max-height: 480px;
+      overflow-y: auto;
+    }
+
+    .guide-actions {
+      padding: 20px 28px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* Loading state */
+    .loading-block {
+      padding: 48px 28px;
+      text-align: center;
+    }
+    .loading-dots { display:flex; gap:6px; align-items:center; justify-content:center; margin-bottom:12px; }
+    .loading-dots span { width:7px; height:7px; border-radius:50%; background:var(--primary); animation:pulse 1.2s ease-in-out infinite; }
+    .loading-dots span:nth-child(2) { animation-delay:0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay:0.4s; }
+    @keyframes pulse { 0%,100%{opacity:0.3;transform:scale(0.9)} 50%{opacity:1;transform:scale(1.1)} }
+
+    /* ── NEXT STEPS ── */
+    .next-steps { margin-bottom:72px; }
+    .next-steps h2 { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:400; color:var(--text-primary); margin-bottom:8px; }
+    .next-steps .lead { color:var(--text-secondary); font-size:15px; margin-bottom:36px; }
+
+    .steps-list { display:flex; flex-direction:column; gap:16px; }
+    .step-item {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      padding: 24px 28px;
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+    .step-num {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--fill-accent);
+      color: var(--on-accent);
+      display: flex; align-items:center; justify-content:center;
+      font-size: 15px; font-weight: 600;
+      flex-shrink: 0;
+    }
+    .step-body h4 { font-size:16px; font-weight:600; color:var(--text-primary); margin-bottom:4px; }
+    .step-body p { font-size:15px; color:var(--text-secondary); line-height:1.6; }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex; align-items:center; gap:8px;
+      padding: 12px 24px;
+      background: var(--fill-accent);
+      color: var(--on-accent);
+      border: none; border-radius: var(--radius);
+      font-size: 15px; font-weight: 500;
+      cursor: pointer; font-family: 'Inter', sans-serif;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+      text-decoration: none;
+    }
+    .btn:hover { opacity:0.88; transform:translateY(-1px); }
+    .btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
+    .btn-outline { background:transparent; color:var(--text-secondary); border:1px solid var(--border-strong); }
+
+    .copied { background: color-mix(in srgb, var(--primary) 20%, var(--neutral)); color: var(--text); }
+
+    footer { padding:32px 0; border-top:1px solid var(--border); margin-top:40px; font-size:13px; color:var(--text-secondary); text-align:center; }
+
+    @media(max-width:640px) {
+      .hero-content { padding:48px 20px 40px; }
+      .hero-title { font-size:32px; }
+      .stage { padding:24px 20px; }
+      .guide-text { font-size:13px; }
+      .guide-actions { flex-direction:column; }
+      .step-item { padding:20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-content">
+      <p class="hero-label">Voice guide complete</p>
+      <h1 class="hero-title">Your voice,<br><em>built.</em></h1>
+      <p class="hero-sub">Five stages. One voice. Ready to paste into Claude and use from today.</p>
+    </div>
+  </div>
+
+  <main>
+    <div class="container">
+
+      <!-- ABOUT JOURNEY -->
+      <section class="journey-section">
+        <p class="section-label">The journey</p>
+        <h2>How your About evolved</h2>
+        <p class="lead">Each stage added a layer. This is what that looked like.</p>
+
+        <div class="about-stages" id="about-stages">
+          <!-- Populated by JS -->
+          <div style="text-align:center; padding:40px; color:var(--text-secondary);">Loading your journey…</div>
+        </div>
+      </section>
+
+      <!-- VOICE GUIDE -->
+      <section class="guide-section">
+        <p class="section-label">Your deliverable</p>
+        <h2>Your voice guide</h2>
+        <p class="lead">Copy this and paste it into your Claude Project as custom instructions. Claude will write in your voice from that point on.</p>
+
+        <div class="guide-card">
+          <div class="guide-card-header">
+            <span id="guide-label">Generating your voice guide…</span>
+            <span id="guide-length" style="display:none;"></span>
+          </div>
+          <div id="guide-loading" class="loading-block">
+            <div class="loading-dots"><span></span><span></span><span></span></div>
+            <p style="font-size:14px; color:var(--text-secondary);">Building your personalised voice guide…</p>
+          </div>
+          <div id="guide-text" class="guide-text" style="display:none;"></div>
+          <div id="guide-actions" class="guide-actions" style="display:none;">
+            <button class="btn" id="copy-btn" onclick="copyGuide()">Copy voice guide</button>
+            <button class="btn btn-outline" onclick="downloadGuide()">Download as .txt</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- NEXT STEPS -->
+      <section class="next-steps">
+        <p class="section-label">What to do now</p>
+        <h2>Three steps to go live</h2>
+        <p class="lead">Five minutes to set up. A lifetime of writing in your own voice.</p>
+
+        <div class="steps-list">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <h4>Create a Claude Project</h4>
+              <p>Go to claude.ai, click Projects in the sidebar, and create a new project. Give it your name or your practice name.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <h4>Paste your voice guide</h4>
+              <p>In the project settings, find Custom Instructions. Paste your voice guide there. Claude will apply it to every conversation in that project.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <h4>Start writing</h4>
+              <p>Open a chat in your project and ask Claude to write something — a newsletter intro, a social post, an email to a client. It will sound like you.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="container"><p>Techie TC · Your voice guide is yours. Use it anywhere.</p></div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script>
+    const { createClient } = supabase;
+    const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let voiceGuideText = '';
+    let clientData = null;
+
+    async function init() {
+      const { data: { session } } = await db.auth.getSession();
+      if (!session) { window.location.href = '/yourAIVoice/'; return; }
+
+      // Load client
+      const { data: client } = await db
+        .from('clients')
+        .select('id, palette, top_values, business_name, email')
+        .eq('email', session.user.email)
+        .single();
+
+      if (!client) { window.location.href = '/yourAIVoice/'; return; }
+      clientData = client;
+
+      document.body.classList.add('palette-' + (client.palette || 'grounded-honey'));
+
+      // Load content
+      const { data: content } = await db
+        .from('client_content')
+        .select('about_palette, about_values, about_patterns, about_references, about_paragraph_1')
+        .eq('client_id', client.id)
+        .single();
+
+      // Load intake responses
+      const { data: responses } = await db
+        .from('intake_responses')
+        .select('distinctive_patterns, organized_themes')
+        .eq('client_id', client.id)
+        .single();
+
+      // Render the About journey
+      renderJourney(content);
+
+      // Generate voice guide
+      const { data: { session: s } } = await db.auth.getSession();
+      generateVoiceGuide(client, content, responses, s.access_token);
+    }
+
+    function renderJourney(content) {
+      const stages = [
+        { num: 1, name: 'Palette', about: content?.about_palette },
+        { num: 2, name: 'Values',  about: content?.about_values },
+        { num: 3, name: 'Patterns', about: content?.about_patterns },
+        { num: 4, name: 'References', about: content?.about_references },
+        { num: 5, name: 'Final', about: content?.about_paragraph_1, isFinal: true },
+      ].filter(s => s.about);
+
+      if (!stages.length) {
+        document.getElementById('about-stages').innerHTML = '<p style="color:var(--text-secondary); padding:24px 0;">No journey data found.</p>';
+        return;
+      }
+
+      const container = document.getElementById('about-stages');
+      container.innerHTML = '';
+
+      stages.forEach((stage, i) => {
+        if (i > 0) {
+          const connector = document.createElement('div');
+          connector.className = 'stage-connector';
+          container.appendChild(connector);
+        }
+
+        const div = document.createElement('div');
+        div.className = 'stage' + (stage.isFinal ? ' is-final' : '');
+        div.innerHTML = `
+          <div class="stage-header">
+            <div class="stage-number">${stage.num}</div>
+            <div class="stage-name">After ${stage.name}</div>
+          </div>
+          <div class="stage-about ${stage.isFinal ? 'final' : ''}">${escapeHtml(stage.about)}</div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    async function generateVoiceGuide(client, content, responses, token) {
+      try {
+        const response = await fetch('https://wubukfrhdgexbppqanaw.supabase.co/functions/v1/generate-voice-guide', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            client_id: client.id,
+            business_name: client.business_name || client.email,
+            palette: client.palette,
+            top_values: client.top_values || [],
+            distinctive_patterns: responses?.distinctive_patterns || '',
+            organized_themes: responses?.organized_themes || '',
+            final_about: content?.about_paragraph_1 || ''
+          })
+        });
+
+        const data = await response.json();
+        if (!data.success) throw new Error(data.error || 'Generation failed');
+
+        voiceGuideText = data.voice_guide || '';
+
+        document.getElementById('guide-loading').style.display = 'none';
+        document.getElementById('guide-text').textContent = voiceGuideText;
+        document.getElementById('guide-text').style.display = 'block';
+        document.getElementById('guide-actions').style.display = 'flex';
+        document.getElementById('guide-label').textContent = 'Your voice guide';
+        document.getElementById('guide-length').textContent = voiceGuideText.split(' ').length + ' words';
+        document.getElementById('guide-length').style.display = 'inline';
+
+      } catch (err) {
+        console.error('Voice guide error:', err);
+        document.getElementById('guide-loading').innerHTML = '<p style="color:var(--text-secondary); padding:24px;">Something went wrong generating your voice guide. Please refresh to try again.</p>';
+      }
+    }
+
+    function copyGuide() {
+      navigator.clipboard.writeText(voiceGuideText).then(() => {
+        const btn = document.getElementById('copy-btn');
+        btn.textContent = 'Copied';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy voice guide';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    function downloadGuide() {
+      const name = (clientData?.business_name || 'my').replace(/\s+/g, '-').toLowerCase();
+      const blob = new Blob([voiceGuideText], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = name + '-voice-guide.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function escapeHtml(text) {
+      return (text || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    init();
+  </script>
+</body>
+</html>
