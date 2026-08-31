@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Build Your Voice | Techie TC</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #B8924A;
+      --neutral: #F5EFE0;
+      --text:    #221A10;
+      --hero-img: none;
+      --overlay: rgba(34,26,16,0.52);
+    }
+
+    .palette-grounded-honey  { --primary: #B8924A; --neutral: #F5EFE0; --text: #221A10; --hero-img: url('groundedHoney.png');     --overlay: rgba(34,26,16,0.52); }
+    .palette-calm-moss       { --primary: #7A9E87; --neutral: #F4F6F2; --text: #2C3E30; --hero-img: url('calmMoss.png');           --overlay: rgba(44,62,48,0.54); }
+    .palette-held-embers     { --primary: #C4897A; --neutral: #FAF0ED; --text: #3A2E2E; --hero-img: url('heldEmbers.png');         --overlay: rgba(58,46,46,0.50); }
+    .palette-focus-form      { --primary: #4A6FA5; --neutral: #F4F6F8; --text: #1C2B3A; --hero-img: url('focus_Form.png');         --overlay: rgba(28,43,58,0.55); }
+    .palette-clean-considered{ --primary: #5C5C5C; --neutral: #F2F2F0; --text: #1A1A1A; --hero-img: url('clean_Considered.png');   --overlay: rgba(26,26,26,0.52); }
+    .palette-embodied        { --primary: #6B7C45; --neutral: #F0EAD6; --text: #2A2018; --hero-img: url('embodied.png');           --overlay: rgba(42,32,24,0.58); }
+    .palette-between-beyond  { --primary: #7B6B9E; --neutral: #F2EFF8; --text: #2E1F3A; --hero-img: url('between_Beyond.png');     --overlay: rgba(46,31,58,0.50); }
+
+    body {
+      --text-soft:      color-mix(in srgb, var(--text) 55%, var(--neutral));
+      --border:         color-mix(in srgb, var(--text) 12%, var(--neutral));
+      --surface-1:      color-mix(in srgb, var(--text) 5%, var(--neutral));
+      --text-primary:   var(--text);
+      --text-secondary: var(--text-soft);
+      --fill-accent:    var(--primary);
+      --on-accent:      var(--neutral);
+      --radius: 8px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--neutral);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: 17px;
+      line-height: 1.75;
+      transition: background-color 0.4s ease, color 0.4s ease;
+    }
+
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    header {
+      padding: 32px 0 24px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 40px;
+    }
+
+    .section-label {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .progress-bar {
+      height: 3px;
+      background: var(--border);
+      margin-bottom: 32px;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      transition: width 0.4s ease;
+    }
+
+    /* About hero */
+    #about-bg {
+      position: relative;
+      background-image: var(--hero-img);
+      background-size: cover;
+      background-position: center;
+      margin-bottom: 48px;
+    }
+
+    #about-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--overlay);
+    }
+
+    .about-content {
+      position: relative;
+      z-index: 1;
+      padding: 56px 48px;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    #about-bg .section-label { color: rgba(255,255,255,0.7); }
+    #about-bg h3 { color: #fff; font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; margin-bottom: 20px; }
+
+    .about-text {
+      color: rgba(255,255,255,0.92);
+      font-size: 16px;
+      line-height: 1.85;
+      white-space: pre-line;
+    }
+
+    /* Patterns card */
+    .patterns-card {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 36px 40px;
+      margin-bottom: 48px;
+    }
+
+    .patterns-card h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+    }
+
+    .patterns-text {
+      font-size: 17px;
+      line-height: 1.8;
+      color: var(--text);
+      font-style: italic;
+    }
+
+    /* Coming soon placeholder */
+    .coming-soon {
+      background: var(--surface-1);
+      border: 1px dashed var(--border);
+      border-radius: 14px;
+      padding: 48px 40px;
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .coming-soon p {
+      color: var(--text-secondary);
+      font-size: 15px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 14px 28px;
+      background: var(--fill-accent);
+      color: var(--on-accent);
+      border: none;
+      border-radius: var(--radius);
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+      text-decoration: none;
+    }
+
+    .btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    footer {
+      padding: 32px 0;
+      border-top: 1px solid var(--border);
+      margin-top: 40px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    @media (max-width: 640px) {
+      .about-content { padding: 40px 20px; }
+      .patterns-card, .coming-soon { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <div class="progress-bar">
+        <div class="progress-fill" style="width: 100%;"></div>
+      </div>
+      <p class="section-label">Step 4 of 4</p>
+      <h2 style="font-family:'Cormorant Garamond',serif; font-size:32px; font-weight:400; line-height:1.2;">Your voice, <em>so far.</em></h2>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ABOUT — three layers deep -->
+    <div id="about-bg">
+      <div class="about-content">
+        <p class="section-label">Your About — palette, values, and patterns</p>
+        <h3>Your story, emerging</h3>
+        <div class="about-text" id="about-text">Loading…</div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <!-- DISTINCTIVE PATTERNS -->
+      <div class="patterns-card" id="patterns-card" style="display:none;">
+        <h3>Your distinctive patterns</h3>
+        <p class="patterns-text" id="patterns-text"></p>
+      </div>
+
+      <!-- COMING SOON PLACEHOLDER -->
+      <div class="coming-soon">
+        <p style="margin-bottom: 8px; font-weight: 500; color: var(--text);">Reference materials — coming next</p>
+        <p>The final stage will capture what shapes how you think: lived experience, influences, the things you've read and learned and carry into the room.</p>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>Techie TC · Building your voice, step by step</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+
+  <script>
+    const { createClient } = supabase;
+    const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    async function init() {
+      const { data: { session } } = await db.auth.getSession();
+      if (!session) { window.location.href = '/yourAIVoice/'; return; }
+
+      const { data: client } = await db
+        .from('clients')
+        .select('id, palette')
+        .eq('email', session.user.email)
+        .single();
+
+      if (!client) { window.location.href = '/yourAIVoice/'; return; }
+
+      // Apply palette
+      document.body.classList.add('palette-' + (client.palette || 'grounded-honey'));
+
+      // Load About
+      const { data: content } = await db
+        .from('client_content')
+        .select('about_paragraph_1')
+        .eq('client_id', client.id)
+        .single();
+
+      document.getElementById('about-text').textContent =
+        content?.about_paragraph_1 || 'Your about section will appear here.';
+
+      // Load distinctive patterns
+      const { data: responses } = await db
+        .from('intake_responses')
+        .select('distinctive_patterns')
+        .eq('client_id', client.id)
+        .single();
+
+      if (responses?.distinctive_patterns) {
+        document.getElementById('patterns-text').textContent = responses.distinctive_patterns;
+        document.getElementById('patterns-card').style.display = 'block';
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
