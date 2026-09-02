@@ -503,6 +503,16 @@
     </div>
   </div>
 
+  <!-- QUICK ACTION ROW — appears below hero once palette is chosen -->
+  <div id="hero-actions" style="display:none; background:var(--neutral); border-bottom:1px solid var(--border); padding:16px 24px;">
+    <div style="max-width:780px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;">
+      <button type="button" onclick="document.getElementById('palette-selector').scrollIntoView({ behavior:'smooth', block:'start' });" style="background:transparent; border:none; cursor:pointer; color:var(--primary); font-size:13px; letter-spacing:0.08em; text-transform:uppercase; font-family:'Inter',sans-serif; font-weight:500; display:flex; align-items:center; gap:6px;">
+        <span>↓</span><span>Change palette</span>
+      </button>
+      <button type="button" onclick="document.getElementById('intake-form').dispatchEvent(new Event('submit', { bubbles:true, cancelable:true }));" class="btn" id="continue-btn-hero" disabled style="opacity:0.4; cursor:not-allowed;">Save palette and continue to values</button>
+    </div>
+  </div>
+
   <!-- HEADER -->
   <header>
     <div class="container">
@@ -678,6 +688,14 @@
       continueBtn.style.opacity = '1';
       continueBtn.style.cursor = 'pointer';
 
+      // Show and enable the hero action row
+      const heroActions = document.getElementById('hero-actions');
+      heroActions.style.display = 'block';
+      const heroContinueBtn = document.getElementById('continue-btn-hero');
+      heroContinueBtn.disabled = false;
+      heroContinueBtn.style.opacity = '1';
+      heroContinueBtn.style.cursor = 'pointer';
+
       // Apply palette to entire page
       document.body.className = document.body.className
         .split(' ')
@@ -740,6 +758,8 @@
       const originalText = continueBtn.textContent;
       continueBtn.disabled = true;
       continueBtn.textContent = 'Generating your voice...';
+      document.getElementById('continue-btn-hero').disabled = true;
+      document.getElementById('continue-btn-hero').textContent = 'Generating...';
 
       console.log('currentClientId:', currentClientId);
       console.log('palette:', palette);
