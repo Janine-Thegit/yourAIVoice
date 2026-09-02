@@ -161,37 +161,10 @@
       font-style: italic;
     }
 
-    /* Before palette selection */
-    #about-you-bg:not(.has-palette) {
-      background-image: none;
-      margin-left: 0;
-      margin-right: 0;
-      background-color: var(--neutral);
-      border-radius: 8px;
-      margin: 60px 0;
-      padding: 48px 32px;
-    }
-
-    #about-you-bg:not(.has-palette) .about-content {
-      color: var(--text);
-      padding: 0;
-      max-width: 100%;
-    }
-
-    #about-you-bg:not(.has-palette) .section-label {
-      color: var(--primary);
-    }
-
-    #about-you-bg:not(.has-palette) h3 {
-      color: var(--text);
-    }
-
-    #about-you-bg:not(.has-palette) .about-preview-text {
-      color: var(--text-soft);
-    }
-
-    #about-you-bg:not(.has-palette) .about-preview-hint {
-      color: var(--text-soft);
+    /* Generic image always visible — palette image overrides when selected */
+    #about-you-bg {
+      background-image: url('about-generic.png');
+      margin-top: 0;
     }
 
     #about-you-bg:not(.has-palette)::before {
@@ -524,7 +497,7 @@
     <div class="container">
       <p>Build Your Voice</p>
       <h1>Your authentic<br>coaching voice,<br>extracted.</h1>
-      <p class="intro-text">Most AI-generated coaching content sounds generic. This fixes that by making Claude sound like you.</p>
+      <p class="intro-text">Most AI-generated coaching content sounds generic. This fixes that by making AI sound like you.</p>
     </div>
   </header>
 
@@ -534,38 +507,39 @@
     <section id="welcome">
       <div class="container">
         <div class="progress-bar">
-          <div class="progress-fill" style="width: 25%;"></div>
+          <div class="progress-fill" style="width: 20%;"></div>
         </div>
+      </div>
 
-        <p class="section-label">Step 1 of 4</p>
-        <h2>Choose your <em>aesthetic.</em></h2>
-
-        <p style="margin-bottom: 32px; color: var(--text-soft);">These seven palettes reflect different sensibilities. Which one feels like the space you hold for your clients?</p>
+      <!-- ABOUT SECTION — generic hero, sits above palette selection -->
+      <div id="about-you-bg">
+        <div class="about-content">
+          <p class="section-label">Your About — starting point</p>
+          <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 20px; color:#fff; margin-bottom:16px;">Your story, before it's yours</h3>
+          <div id="about-preview" class="about-preview-text">
+            <!-- Generic about section will be inserted here -->
+          </div>
+          <p class="about-preview-hint" style="color:rgba(255,255,255,0.65); font-size:14px; margin-top:16px; font-style:italic;">This is where every coach starts. Over the next five sections, it will become unmistakably you — shaped by your palette, values, patterns, references, and real writing voice.</p>
+        </div>
+      </div>
 
         <form id="intake-form">
+          <div class="container" style="padding-top:48px;">
+            <p class="section-label">Step 1 of 5</p>
+            <h2 style="font-family:'Cormorant Garamond',serif; font-size:32px; font-weight:400; margin-bottom:16px;">Choose your <em>aesthetic.</em></h2>
+            <p style="margin-bottom: 32px; color: var(--text-soft);">These seven palettes reflect different sensibilities. Which one feels like the space you hold for your clients?</p>
+          </div>
+
           <!-- PALETTE SELECTOR -->
-          <div class="palettes-list" id="palette-selector">
-            <!-- Palettes will be generated here -->
+          <div class="container">
+            <div class="palettes-list" id="palette-selector">
+              <!-- Palettes will be generated here -->
+            </div>
           </div>
 
           <input type="hidden" id="selected-palette" name="palette" required>
 
-
         </form>
-      </div>
-
-      <!-- ABOUT SECTION PREVIEW WITH BACKGROUNDS - FULL WIDTH -->
-      <div id="about-you-bg">
-        <div class="about-content">
-          <p class="section-label">About You (Preview)</p>
-          <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 20px;">Your story emerges</h3>
-          
-          <div id="about-preview" class="about-preview-text">
-            <!-- Generic about section will be inserted here -->
-          </div>
-          
-          <p class="about-preview-hint">This is a live preview. As you answer questions about your values, voice, and story, this about section will become more deeply you. Watch it transform through each stage.</p>
-        </div>
       </div>
 
       <!-- BACK TO PALETTES BUTTON -->
