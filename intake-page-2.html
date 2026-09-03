@@ -408,9 +408,13 @@
       justify-content: center;
     }
 
+    /* Fixed at three per row, however many suitcases are actually tied —
+       a 4th (or 7th) wraps to a new line rather than squeezing everyone
+       narrower. calc() accounts for the two 1.5rem gaps between three
+       items so the row fills the container evenly at three-up. */
     .tiebreak-suitcase {
-      flex: 1 1 160px;
-      max-width: 200px;
+      flex: 0 0 calc((100% - 3rem) / 3);
+      max-width: 230px;
       cursor: grab;
       transition: transform 0.18s ease, opacity 0.18s ease;
     }
