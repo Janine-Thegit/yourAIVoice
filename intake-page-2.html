@@ -394,6 +394,66 @@
       transform: translateY(-1px);
     }
 
+    /* ── TIEBREAK — a close call for 3rd place. Reuses the same suitcase
+       artwork as the main exercise (value-tag / suitcase-fill / outline)
+       so it reads as one more round, not a different screen. Coach drags
+       (or arrow-nudges, for touch) the tied suitcases into the order
+       they'd keep them; we take however many the boundary needs off the
+       top once they confirm. ── */
+    .tiebreak-row {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .tiebreak-suitcase {
+      flex: 1 1 160px;
+      max-width: 200px;
+      cursor: grab;
+      transition: transform 0.18s ease, opacity 0.18s ease;
+    }
+
+    .tiebreak-suitcase.dragging {
+      opacity: 0.4;
+    }
+
+    .tiebreak-move-btns {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .tiebreak-move-btn {
+      background: none;
+      border: 1px solid var(--border-strong);
+      color: var(--text);
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      font-size: 14px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.15s ease;
+    }
+
+    .tiebreak-move-btn:disabled {
+      opacity: 0.25;
+      cursor: default;
+    }
+
+    .tiebreak-move-btn:not(:disabled):hover {
+      opacity: 0.7;
+    }
+
+    @media (max-width: 640px) {
+      .tiebreak-suitcase { flex: 1 1 120px; max-width: 42%; }
+    }
+
     /* ── ABOUT (REFINED) — same treatment as the has-palette state on page 1 ── */
     #about-refined-bg {
       position: relative;
@@ -708,21 +768,110 @@
     // eventually, the Supabase write) will read from.
     window.suitcaseResults = null;
 
+    // Set only while a boundary tie is being resolved. { tiedValues,
+    // groupStart, baseRanked, order } — order is the array of value
+    // indices in the position the coach currently has them dragged to.
+    let tieBreak = null;
+    let dragSourcePosition = null;
+
     function handleChoose(valueIdx) {
       scores[valueIdx]++;
       if (pairIndex < pairs.length - 1) {
         pairIndex++;
-      } else {
-        complete = true;
-        window.suitcaseResults = getRanked();
-        const continueBtn = document.getElementById('continue-btn');
-        continueBtn.disabled = false;
+        renderSuitcase();
+        return;
       }
+
+      const ranked = getRanked();
+      const tie = detectBoundaryTie(ranked);
+      if (tie) {
+        startTieBreak(tie, ranked);
+      } else {
+        finalizeResults(ranked);
+      }
+    }
+
+    // A tie only matters if it straddles the 3rd-place cutoff — a tie for
+    // 1st/2nd that doesn't touch 3rd never needs resolving, since the top
+    // three function as an unordered set downstream. Scores are contiguous
+    // once sorted, so the tied group is always a single slice.
+    function detectBoundaryTie(ranked) {
+      const boundaryScore = ranked[2].score;
+      let groupStart = 2;
+      while (groupStart > 0 && ranked[groupStart - 1].score === boundaryScore) groupStart--;
+      let groupEnd = 2;
+      while (groupEnd + 1 < ranked.length && ranked[groupEnd + 1].score === boundaryScore) groupEnd++;
+      if (groupStart === groupEnd) return null;
+      return {
+        tiedValues: ranked.slice(groupStart, groupEnd + 1),
+        groupStart
+      };
+    }
+
+    function startTieBreak(tie, ranked) {
+      tieBreak = {
+        tiedValues: tie.tiedValues,
+        groupStart: tie.groupStart,
+        baseRanked: ranked,
+        order: tie.tiedValues.map(v => v.idx)
+      };
+      renderSuitcase();
+    }
+
+    function moveTieItem(position, direction) {
+      const target = position + direction;
+      if (target < 0 || target >= tieBreak.order.length) return;
+      const newOrder = [...tieBreak.order];
+      [newOrder[position], newOrder[target]] = [newOrder[target], newOrder[position]];
+      tieBreak.order = newOrder;
+      renderSuitcase();
+    }
+
+    function onTieDragStart(event, position) {
+      dragSourcePosition = position;
+      event.currentTarget.classList.add('dragging');
+      event.dataTransfer.effectAllowed = 'move';
+    }
+
+    function onTieDragOver(event) {
+      event.preventDefault();
+      event.dataTransfer.dropEffect = 'move';
+    }
+
+    function onTieDrop(event, targetPosition) {
+      event.preventDefault();
+      if (dragSourcePosition === null || dragSourcePosition === targetPosition) return;
+      const newOrder = [...tieBreak.order];
+      const [moved] = newOrder.splice(dragSourcePosition, 1);
+      newOrder.splice(targetPosition, 0, moved);
+      tieBreak.order = newOrder;
+      dragSourcePosition = null;
+      renderSuitcase();
+    }
+
+    function onTieDragEnd(event) {
+      event.currentTarget.classList.remove('dragging');
+      dragSourcePosition = null;
+    }
+
+    function confirmTieBreak() {
+      const { baseRanked, groupStart, tiedValues, order } = tieBreak;
+      const before = baseRanked.slice(0, groupStart);
+      const orderedTied = order.map(idx => tiedValues.find(v => v.idx === idx));
+      const after = baseRanked.slice(groupStart + tiedValues.length);
+      tieBreak = null;
+      finalizeResults([...before, ...orderedTied, ...after]);
+    }
+
+    function finalizeResults(ranked) {
+      complete = true;
+      window.suitcaseResults = ranked;
+      document.getElementById('continue-btn').disabled = false;
       renderSuitcase();
     }
 
     function copyResults() {
-      const ranked = getRanked();
+      const ranked = window.suitcaseResults || getRanked();
       const text = 'My values, in order:\n\n' +
         ranked.map((v, i) => `${i + 1}. ${v.name} (${v.score} points)`).join('\n');
       navigator.clipboard.writeText(text);
@@ -734,8 +883,11 @@
         .sort((a, b) => b.score - a.score);
     }
 
+    // Once a tie has been resolved by hand, the coach's chosen order is
+    // the source of truth — re-sorting from raw scores here would quietly
+    // throw away the drag and fall back to array order again.
     function renderComplete() {
-      const ranked = getRanked();
+      const ranked = window.suitcaseResults || getRanked();
       return `
         <div>
           <h3 style="font-size: 20px; font-weight: 500; margin-bottom: 1.5rem; color: var(--text-primary); font-family: 'Cormorant Garamond', serif;">
@@ -837,8 +989,56 @@
       `;
     }
 
+    function renderTieBreak() {
+      const ordinals = ['1st', '2nd', '3rd', '4th', '5th', '6th'];
+      const orderedValues = tieBreak.order.map(idx => tieBreak.tiedValues.find(v => v.idx === idx));
+
+      return `
+        <div class="suitcase-intro" style="margin-bottom: 2rem;">
+          <div class="suitcase-intro-text">
+            <p class="section-intro" style="margin-bottom: 4px;">A close call.</p>
+            <p class="instinct-hint" style="font-weight: 400; font-style: normal;">These came out tied. Drag them into the order you'd keep them &mdash; same instinct as before, just more than two at once.</p>
+          </div>
+        </div>
+
+        <div class="tiebreak-row">
+          ${orderedValues.map((v, position) => `
+            <div class="value-tag tiebreak-suitcase" draggable="true"
+                 ondragstart="onTieDragStart(event, ${position})"
+                 ondragover="onTieDragOver(event)"
+                 ondrop="onTieDrop(event, ${position})"
+                 ondragend="onTieDragEnd(event)">
+              <div class="suitcase-fill"></div>
+              <div class="suitcase-outline"></div>
+              <div class="suitcase-section suitcase-section-prompt">
+                <p class="tag-prompt">${ordinals[position]}</p>
+              </div>
+              <div class="suitcase-section suitcase-section-value">
+                <h3 class="tag-name">${v.name}</h3>
+                <p class="tag-def">${v.def}</p>
+              </div>
+              <div class="suitcase-section suitcase-section-button">
+                <div class="tiebreak-move-btns">
+                  <button class="tiebreak-move-btn" onclick="moveTieItem(${position}, -1)" ${position === 0 ? 'disabled' : ''} aria-label="Move earlier">&lsaquo;</button>
+                  <button class="tiebreak-move-btn" onclick="moveTieItem(${position}, 1)" ${position === orderedValues.length - 1 ? 'disabled' : ''} aria-label="Move later">&rsaquo;</button>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+
+        <button
+          onclick="confirmTieBreak()"
+          style="width: 100%; padding: 12px; background-color: var(--fill-accent); color: var(--on-accent); border: none; border-radius: var(--radius); font-size: 15px; font-weight: 500; cursor: pointer; font-family: 'Inter', sans-serif;"
+        >
+          Confirm order
+        </button>
+      `;
+    }
+
     function renderSuitcase() {
-      document.getElementById('suitcase-app').innerHTML = complete ? renderComplete() : renderPairs();
+      const html = complete ? renderComplete() : (tieBreak ? renderTieBreak() : renderPairs());
+      document.getElementById('suitcase-app').innerHTML = html;
     }
 
     renderSuitcase();
