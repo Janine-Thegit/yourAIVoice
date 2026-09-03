@@ -347,26 +347,28 @@
 </head>
 <body>
 
+  <!-- ABOUT PREVIEW (carries forward from page 2) — shown first, above the
+       progress bar, so the coach lands on their own voice before anything
+       else. -->
+  <div id="about-refined-bg">
+    <div class="about-content">
+      <p class="section-label">Your About — so far</p>
+      <h3 style="font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:400;">Your story so far</h3>
+      <div class="about-preview-text" id="about-preview-text">Loading your about section…</div>
+    </div>
+  </div>
+
   <header>
     <div class="container">
       <div class="progress-bar">
-        <div class="progress-fill" style="width: 75%;"></div>
+        <div class="progress-fill" style="width: 60%;"></div>
       </div>
-      <p class="section-label">Step 3 of 4</p>
+      <p class="section-label">Step 3 of 5</p>
       <h2 style="font-family:'Cormorant Garamond',serif; font-size:32px; font-weight:400; line-height:1.2;">Five <em>questions.</em></h2>
     </div>
   </header>
 
   <main>
-
-    <!-- ABOUT PREVIEW (carries forward from page 2) -->
-    <div id="about-refined-bg">
-      <div class="about-content">
-        <p class="section-label">Your About — so far</p>
-        <h3 style="font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:400;">Your story so far</h3>
-        <div class="about-preview-text" id="about-preview-text">Loading your about section…</div>
-      </div>
-    </div>
 
     <!-- FIVE QUESTIONS -->
     <section id="questions-section">
@@ -421,7 +423,7 @@
         <!-- Q4 -->
         <div class="question-card" id="card-3" style="display:none;">
           <p class="presence-cue">[shifts, more gentle]</p>
-          <p class="question-text">If you had an extra million in your bank account — no strings, no obligations — what would you actually do with it?</p>
+          <p class="question-text">If you had an extra million dollars — no strings, no obligations — what would you actually do with it?</p>
           <textarea class="answer-area" id="answer-3" placeholder="Take your time…" rows="4"></textarea>
           <div class="answered-block" id="answered-3"></div>
           <div class="question-footer">
@@ -503,6 +505,7 @@
 
     // ── INIT ──
     async function init() {
+      window.scrollTo(0, 0);
       const { data: { session } } = await db.auth.getSession();
       if (!session) { window.location.href = '/yourAIVoice/'; return; }
 
@@ -560,7 +563,7 @@
       } else {
         textarea.style.display = 'block';
         answered.style.display = 'none';
-        setTimeout(() => textarea.focus(), 50);
+        setTimeout(() => textarea.focus({ preventScroll: true }), 50);
       }
 
       currentQuestion = n;
