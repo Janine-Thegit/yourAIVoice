@@ -229,9 +229,9 @@
 
   <header>
     <div class="container">
-      <div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div>
-      <p class="section-label">Step 6 of 6</p>
-      <h2 style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:400;line-height:1.2;">Your real <em>voice.</em></h2>
+      <div class="progress-bar"><div class="progress-fill" style="width:83.3%;"></div></div>
+      <p class="section-label">Step 5 of 6</p>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:400;line-height:1.2;">Who you're <em>for.</em></h2>
     </div>
   </header>
 
@@ -251,32 +251,47 @@
 
       <!-- FINAL ABOUT CARD (shown when dialogue completes) -->
       <div class="final-about-card" id="final-about-card">
-        <h3>Your About — refined</h3>
-        <div class="final-about-text" id="final-about-text"></div>
-        <button class="btn" id="complete-btn" onclick="completeIntake()">Complete my voice guide →</button>
+        <h3>Who you're writing for</h3>
+        <div class="final-about-text" id="final-audience-text"></div>
+        <button class="btn" id="complete-btn" onclick="continueToSamples()">Continue to your writing samples →</button>
         <button class="btn btn-outline" onclick="continueDialogue()">Keep refining</button>
       </div>
 
       <!-- INPUT -->
-      <!-- PHASE 1: Three sample paste boxes (first turn only) -->
-      <div class="input-area" id="samples-area">
-        <p style="font-size:14px; color:var(--text-secondary); margin-bottom:16px; font-style:italic;">Paste up to three pieces — a newsletter, an email, something from your website. Use as many as feel relevant.</p>
-        <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:16px;">
+      <!-- PHASE 1: Dream client + three people exercise (first turn only) -->
+      <div class="input-area" id="dreamclient-area">
+        <p style="font-size:14px; color:var(--text-secondary); margin-bottom:16px; font-style:italic;">Describe your dream client, then think of three real people who remind you of them — people you've actually worked with or known. For each, name what they excel at, and what's holding them back.</p>
+
+        <div style="margin-bottom:20px;">
+          <label style="font-size:12px; text-transform:uppercase; letter-spacing:0.07em; color:var(--text-secondary); display:block; margin-bottom:6px;">Your dream client</label>
+          <textarea id="dream-client" placeholder="Who are they? What are they carrying? What would it mean to them to find you?…" rows="4" style="width:100%; padding:14px 16px; background:var(--neutral); border:1px solid var(--border-strong); border-radius:var(--radius); font-family:'Inter',sans-serif; font-size:15px; font-weight:300; color:var(--text); line-height:1.6; resize:vertical; outline:none; transition:border-color 0.2s ease;"></textarea>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:20px; margin-bottom:16px;">
           <div>
-            <label style="font-size:12px; text-transform:uppercase; letter-spacing:0.07em; color:var(--text-secondary); display:block; margin-bottom:6px;">Sample 1</label>
-            <textarea id="sample-1" placeholder="Paste your first piece here…" rows="4" style="width:100%; padding:14px 16px; background:var(--neutral); border:1px solid var(--border-strong); border-radius:var(--radius); font-family:'Inter',sans-serif; font-size:15px; font-weight:300; color:var(--text); line-height:1.6; resize:vertical; outline:none; transition:border-color 0.2s ease;"></textarea>
+            <p style="font-size:13px; font-weight:500; color:var(--text-primary); margin-bottom:10px;">Person 1</p>
+            <label style="font-size:12px; text-transform:uppercase; letter-spacing:0.07em; color:var(--text-secondary); display:block; margin-bottom:6px;">What they excel at</label>
+            <textarea id="person-1-excels" placeholder="What are they genuinely good at?…" rows="2" style="width:100%; padding:14px 16px; margin-bottom:10px; background:var(--neutral); border:1px solid var(--border-strong); border-radius:var(--radius); font-family:'Inter',sans-serif; font-size:15px; font-weight:300; color:var(--text); line-height:1.6; resize:vertical; outline:none; transition:border-color 0.2s ease;"></textarea>
+            <label style="font-size:12px; text-transform:uppercase; letter-spacing:0.07em; color:var(--text-secondary); display:block; margin-bottom:6px;">What's holding them back</label>
+            <textarea id="person-1-held-back" placeholder="What's stalling them?…" rows="2" style="width:100%; padding:14px 16px; background:var(--neutral); border:1px solid var(--border-strong); border-radius:var(--radius); font-family:'Inter',sans-serif; font-size:15px; font-weight:300; color:var(--text); line-height:1.6; resize:vertical; outline:none; transition:border-color 0.2s ease;"></textarea>
           </div>
           <div>
-            <label style="font-size:12px; text-transform:uppercase; letter-spacing:0.07em; color:var(--text-secondary); display:block; margin-bottom:6px;">Sample 2 <span style="opacity:0.5;">(optional)</span></label>
-            <textarea id="sample-2" placeholder="Paste a second piece here…" rows="4" style="width:100%; padding:14px 16px; background:var(--neutral); border:1px solid var(--border-strong); border-radius:var(--radius); font-family:'Inter',sans-serif; font-size:15px; font-weight:300; color:var(--text); line-height:1.6; resize:vertical; outline:none; transition:border-color 0.2s ease;"></textarea>
+            <p style="font-size:13px; font-weight:500; color:var(--text-primary); margin-bottom:10px;">Person 2</p>
+            <label style="font-size:12px; text-transform:uppercase; letter-spacing:0.07em; color:var(--text-secondary); display:block; margin-bottom:6px;">What they excel at</label>
+            <textarea id="person-2-excels" placeholder="What are they genuinely good at?…" rows="2" style="width:100%; padding:14px 16px; margin-bottom:10px; background:var(--neutral); border:1px solid var(--border-strong); border-radius:var(--radius); font-family:'Inter',sans-serif; font-size:15px; font-weight:300; color:var(--text); line-height:1.6; resize:vertical; outline:none; transition:border-color 0.2s ease;"></textarea>
+            <label style="font-size:12px; text-transform:uppercase; letter-spacing:0.07em; color:var(--text-secondary); display:block; margin-bottom:6px;">What's holding them back</label>
+            <textarea id="person-2-held-back" placeholder="What's stalling them?…" rows="2" style="width:100%; padding:14px 16px; background:var(--neutral); border:1px solid var(--border-strong); border-radius:var(--radius); font-family:'Inter',sans-serif; font-size:15px; font-weight:300; color:var(--text); line-height:1.6; resize:vertical; outline:none; transition:border-color 0.2s ease;"></textarea>
           </div>
           <div>
-            <label style="font-size:12px; text-transform:uppercase; letter-spacing:0.07em; color:var(--text-secondary); display:block; margin-bottom:6px;">Sample 3 <span style="opacity:0.5;">(optional)</span></label>
-            <textarea id="sample-3" placeholder="Paste a third piece here…" rows="4" style="width:100%; padding:14px 16px; background:var(--neutral); border:1px solid var(--border-strong); border-radius:var(--radius); font-family:'Inter',sans-serif; font-size:15px; font-weight:300; color:var(--text); line-height:1.6; resize:vertical; outline:none; transition:border-color 0.2s ease;"></textarea>
+            <p style="font-size:13px; font-weight:500; color:var(--text-primary); margin-bottom:10px;">Person 3</p>
+            <label style="font-size:12px; text-transform:uppercase; letter-spacing:0.07em; color:var(--text-secondary); display:block; margin-bottom:6px;">What they excel at</label>
+            <textarea id="person-3-excels" placeholder="What are they genuinely good at?…" rows="2" style="width:100%; padding:14px 16px; margin-bottom:10px; background:var(--neutral); border:1px solid var(--border-strong); border-radius:var(--radius); font-family:'Inter',sans-serif; font-size:15px; font-weight:300; color:var(--text); line-height:1.6; resize:vertical; outline:none; transition:border-color 0.2s ease;"></textarea>
+            <label style="font-size:12px; text-transform:uppercase; letter-spacing:0.07em; color:var(--text-secondary); display:block; margin-bottom:6px;">What's holding them back</label>
+            <textarea id="person-3-held-back" placeholder="What's stalling them?…" rows="2" style="width:100%; padding:14px 16px; background:var(--neutral); border:1px solid var(--border-strong); border-radius:var(--radius); font-family:'Inter',sans-serif; font-size:15px; font-weight:300; color:var(--text); line-height:1.6; resize:vertical; outline:none; transition:border-color 0.2s ease;"></textarea>
           </div>
         </div>
         <div style="display:flex; justify-content:flex-end;">
-          <button class="send-btn" id="samples-btn" onclick="sendSamples()">Send my writing →</button>
+          <button class="send-btn" id="dreamclient-btn" onclick="sendDreamClient()">Share this →</button>
         </div>
       </div>
 
@@ -309,32 +324,36 @@
     let messageCount = 0;
     let session = null;
 
-    const SYSTEM_PROMPT = `You are a warm, perceptive writing coach helping a therapeutic coach refine their About section by comparing it to their actual writing voice.
+    const SYSTEM_PROMPT = `You are a warm, perceptive coaching guide helping a therapeutic coach get specific about who their content is actually for.
 
-You have access to their current About section (provided below). When they share writing samples, your job is to:
+They've described a dream client, then named three real people who remind them of that dream client — for each, what that person excels at, and what's holding them back.
 
-1. Read carefully and notice specific voice patterns — not generic praise
-2. Compare to the About section honestly
-3. Name the gap if there is one, and ask one clarifying question
-4. Listen to their response and adjust your thinking
-5. When the dialogue feels complete, offer a refined About section that better reflects their real voice
+Your job:
+1. Read across all four (the dream client description plus the three people). Look for what repeats in the "excels at" answers, what repeats in the "held back" answers, and where the three people sharpen or add to the original dream client description.
+2. Form a portrait — a specific person in a specific situation, not a persona or demographic. Sharper and more particular than the original description.
+3. Name what this reader needs from the coach's content, and in what order (usually recognition before advice, permission before information).
+4. Offer, once and lightly, what the pattern across the three people might say about the coach themselves — held gently, offered as worth sitting with, never asserted as fact, never returned to unless the coach brings it back up.
+5. Ask one clarifying question that would sharpen the portrait further.
+6. Listen to their response and refine the portrait accordingly.
+7. When the portrait feels settled — usually once the coach confirms some version of "yes, that's her" — offer the finished portrait.
 
 TONE:
 - Use [bracketed presence cues] naturally: [reads through], [pauses], [sits back], [nods]
-- Be specific. Quote their actual phrases when you notice something
-- Curious, not prescriptive. Their call on what to keep or change
-- Warm but honest. If their About sounds more formal than their writing, name it
-- Know when to close. After 3-4 exchanges, offer to finalize
+- Be specific. Not "someone who wants to grow" — name the actual gap between what they have and what they're short on
+- Curious, not prescriptive. Their call on what's true
+- The mirror observation about the coach is a courtesy, offered once. Do not build a case for it or chase it if the coach doesn't pick it up
+- Know when to close. Usually after 2-4 exchanges, once the portrait sounds settled
 
-WHEN OFFERING A FINAL ABOUT:
+WHEN OFFERING THE FINAL PORTRAIT:
 Signal clearly that you're done with the dialogue. End your message with exactly this marker on its own line:
----FINAL_ABOUT---
-[the refined About text here]
+---FINAL_AUDIENCE---
+[The portrait, 2-3 sentences]
 
-Only use this marker when you're genuinely ready to finalize — not speculatively.
+[What they need from this content, and in what order]
 
-CURRENT ABOUT SECTION:
-{{ABOUT}}`;
+The text after the marker must contain ONLY the portrait and what-they-need statement. Never include the mirror observation about the coach in this section — that stays in the conversation, not in the saved profile.
+
+Only use this marker when you're genuinely ready to finalize — not speculatively.`;
 
     // ── INIT ──
     async function init() {
@@ -355,11 +374,11 @@ CURRENT ABOUT SECTION:
       // Opening message from Claude
       addClaudeMessage(`[settles in]
 
-You've built your About section through palette, values, your distinctive patterns, and what shapes how you think. Now let's ground it in reality.
+You've named your values and answered the five questions, and built out your references. Now let's get specific about who all of this is actually for.
 
-Share some existing content you've written. A newsletter piece. An email to a client. Something from your website or a social post. Anything that feels like you right now. It doesn't need to be polished — it just needs to be real.
+Describe your dream client below, then think of three real people who remind you of them. For each, name what they excel at, and what's holding them back.
 
-I'll read it and tell you what I notice about how you actually sound. Then we'll compare that to your current About and see if they're talking to each other.`);
+I'll read across all of it and tell you what's forming — who this reader actually is, and what they need from you before anything else.`);
     }
 
     // ── UI HELPERS ──
@@ -403,27 +422,32 @@ I'll read it and tell you what I notice about how you actually sound. Then we'll
       return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
     }
 
-    // ── SEND SAMPLES (phase 1 — first turn) ──
-    async function sendSamples() {
-      const s1 = document.getElementById('sample-1').value.trim();
-      const s2 = document.getElementById('sample-2').value.trim();
-      const s3 = document.getElementById('sample-3').value.trim();
+    // ── SEND DREAM CLIENT + THREE PEOPLE (phase 1 — first turn) ──
+    async function sendDreamClient() {
+      const dreamClient = document.getElementById('dream-client').value.trim();
 
-      if (!s1) {
-        document.getElementById('sample-1').focus();
-        document.getElementById('sample-1').style.borderColor = 'var(--primary)';
+      if (!dreamClient) {
+        document.getElementById('dream-client').focus();
+        document.getElementById('dream-client').style.borderColor = 'var(--primary)';
         return;
       }
 
-      const parts = [s1, s2, s3].filter(Boolean);
-      const combined = parts.length === 1
-        ? parts[0]
-        : parts.map((p, i) => '[Sample ' + (i + 1) + ']\n' + p).join('\n\n---\n\n');
+      const people = [1, 2, 3].map(n => ({
+        excels: document.getElementById(`person-${n}-excels`).value.trim(),
+        heldBack: document.getElementById(`person-${n}-held-back`).value.trim()
+      })).filter(p => p.excels || p.heldBack);
 
-      document.getElementById('samples-btn').disabled = true;
+      const parts = [`[Dream client]\n${dreamClient}`];
+      people.forEach((p, i) => {
+        if (p.excels) parts.push(`[Person ${i + 1} — excels at]\n${p.excels}`);
+        if (p.heldBack) parts.push(`[Person ${i + 1} — held back by]\n${p.heldBack}`);
+      });
+      const combined = parts.join('\n\n');
+
+      document.getElementById('dreamclient-btn').disabled = true;
 
       // Switch to chat phase
-      document.getElementById('samples-area').style.display = 'none';
+      document.getElementById('dreamclient-area').style.display = 'none';
       document.getElementById('input-area').style.display = 'block';
 
       addCoachMessage(combined);
@@ -459,10 +483,9 @@ I'll read it and tell you what I notice about how you actually sound. Then we'll
       const loading = addLoadingMessage();
 
       try {
-        const systemPrompt = SYSTEM_PROMPT.replace('{{ABOUT}}', currentAbout);
         const { data: { session: s } } = await db.auth.getSession();
 
-        const response = await fetch('https://wubukfrhdgexbppqanaw.supabase.co/functions/v1/generate-samples-dialogue', {
+        const response = await fetch('https://wubukfrhdgexbppqanaw.supabase.co/functions/v1/generate-dream-client-dialogue', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -470,7 +493,7 @@ I'll read it and tell you what I notice about how you actually sound. Then we'll
           },
           body: JSON.stringify({
             client_id: currentClientId,
-            system_prompt: systemPrompt,
+            system_prompt: SYSTEM_PROMPT,
             messages: conversationHistory,
             message_count: messageCount
           })
@@ -482,13 +505,13 @@ I'll read it and tell you what I notice about how you actually sound. Then we'll
         const reply = data.reply || '';
         removeLoadingMessage();
 
-        if (reply.includes('---FINAL_ABOUT---')) {
-          const parts = reply.split('---FINAL_ABOUT---');
+        if (reply.includes('---FINAL_AUDIENCE---')) {
+          const parts = reply.split('---FINAL_AUDIENCE---');
           const dialoguePart = parts[0].trim();
-          const finalAbout = parts[1]?.trim() || '';
+          const finalAudience = parts[1]?.trim() || '';
           if (dialoguePart) addClaudeMessage(dialoguePart);
           conversationHistory.push({ role: 'assistant', content: reply });
-          if (finalAbout) showFinalAbout(finalAbout);
+          if (finalAudience) showFinalAudience(finalAudience);
         } else {
           addClaudeMessage(reply);
           conversationHistory.push({ role: 'assistant', content: reply });
@@ -501,13 +524,13 @@ I'll read it and tell you what I notice about how you actually sound. Then we'll
       }
     }
 
-    function showFinalAbout(aboutText) {
-      document.getElementById('final-about-text').textContent = aboutText;
+    function showFinalAudience(audienceText) {
+      document.getElementById('final-audience-text').textContent = audienceText;
       document.getElementById('final-about-card').style.display = 'block';
       document.getElementById('final-about-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-      // Store the refined about for saving
-      window._finalAbout = aboutText;
+      // Store the confirmed audience profile for saving
+      window._finalAudience = audienceText;
     }
 
     function continueDialogue() {
@@ -515,7 +538,7 @@ I'll read it and tell you what I notice about how you actually sound. Then we'll
       document.getElementById('coach-input').focus();
     }
 
-    async function completeIntake() {
+    async function continueToSamples() {
       const btn = document.getElementById('complete-btn');
       btn.disabled = true;
       btn.textContent = 'Saving…';
@@ -523,7 +546,7 @@ I'll read it and tell you what I notice about how you actually sound. Then we'll
       try {
         const { data: { session: s } } = await db.auth.getSession();
 
-        await fetch('https://wubukfrhdgexbppqanaw.supabase.co/functions/v1/complete-intake', {
+        const response = await fetch('https://wubukfrhdgexbppqanaw.supabase.co/functions/v1/save-audience-profile', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -531,16 +554,19 @@ I'll read it and tell you what I notice about how you actually sound. Then we'll
           },
           body: JSON.stringify({
             client_id: currentClientId,
-            final_about: window._finalAbout || currentAbout
+            audience_profile: window._finalAudience || ''
           })
         });
 
-        window.location.href = 'intake-complete.html';
+        const data = await response.json();
+        if (!data.success) throw new Error(data.error || 'Function failed');
+
+        window.location.href = 'intake-page-6.html';
 
       } catch (err) {
-        console.error('Complete error:', err);
+        console.error('Save error:', err);
         btn.disabled = false;
-        btn.textContent = 'Complete my voice guide →';
+        btn.textContent = 'Continue to your writing samples →';
         alert('Something went wrong. Please try again.');
       }
     }
