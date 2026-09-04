@@ -508,19 +508,38 @@
     async function loadClientData(email) {
       showScreen('screen-loading')
 
-      const { data: client, error: clientError } = await db
-        .from('clients')
-        .select('*')
-        .eq('email', email)
-        .single()
+    let { data: client, error: clientError } = await db
+  .from('clients')
+  .select('*')
+  .eq('email', email)
+  .single()
 
-      if (clientError || !client) {
-        showScreen('screen-login')
-        showMessage('login-message', 'error', 'No account found for this email. Please contact your Techie TC.')
-        return
-      }
+if (clientError || !client) {
+  // No account yet for this email -- provision one now. Runs
+  // server-side via the service role so it doesn't depend on
+  // opening a client-side INSERT policy on clients/client_content.
+  const { data: { session } } = await db.auth.getSession()
 
-      clientData = client
+  const res = await fetch('https://wubukfrhdgexbppqanaw.supabase.co/functions/v1/create-client', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${session.access_token}`,
+    },
+  })
+
+  if (!res.ok) {
+    showScreen('screen-login')
+    showMessage('login-message', 'error', 'Something went wrong setting up your account. Please try again.')
+    return
+  }
+
+  const result = await res.json()
+  client = result.client
+}
+
+clientData = client
+      
       selectedPalette = client.palette || 'grounded-honey'
 
       const { data: content } = await db
