@@ -183,17 +183,26 @@
     el.textContent = text
   }
 
-  // The real Supabase verification URL rides in the fragment, untouched --
-  // fragments are never sent to a server and never prefetched by scanners,
-  // so nothing can consume this token before a real click does.
-  const target = window.location.hash.slice(1)
+  // The email template hands us a bare token, not a full URL -- Supabase's
+  // Go templates mangle a full URL-shaped value wrapped inside another URL,
+  // so we build the real Supabase verification URL ourselves here instead,
+  // where the encoding is fully under our control.
+  const params = new URLSearchParams(window.location.search)
+  const tokenHash = params.get('token_hash')
+  const type = params.get('type') || 'magiclink'
+
+  const SUPABASE_URL = 'https://wubukfrhdgexbppqanaw.supabase.co'
+  const REDIRECT_TO = new URL('index.html', window.location.href).toString()
+
   const btn = document.getElementById('confirm-btn')
 
-  if (!target || !target.startsWith('http')) {
+  if (!tokenHash) {
     btn.disabled = true
     btn.textContent = 'Link unavailable'
     showMessage('This link looks incomplete. Please request a new one.')
   } else {
+    const target = `${SUPABASE_URL}/auth/v1/verify?token=${encodeURIComponent(tokenHash)}&type=${encodeURIComponent(type)}&redirect_to=${encodeURIComponent(REDIRECT_TO)}`
+
     btn.addEventListener('click', () => {
       btn.disabled = true
       btn.textContent = 'Signing in...'
