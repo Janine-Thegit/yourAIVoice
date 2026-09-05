@@ -127,7 +127,56 @@
     .blurb .subtitle { margin-bottom: 16px; }
     .blurb .subtitle:last-child { margin-bottom: 0; }
 
-    /* ── TABS ── */
+    /* ── BLURB TABS ── */
+    .blurb-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 20px;
+      background: var(--surface-2);
+      border-radius: 4px;
+      padding: 4px;
+    }
+
+    .blurb-tab-btn {
+      flex: 1;
+      padding: 10px 16px;
+      background: transparent;
+      border: none;
+      border-radius: 3px;
+      color: var(--text-soft);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .blurb-tab-btn.active { background: var(--surface); color: var(--text); }
+    .blurb-tab-btn:hover:not(.active) { color: var(--text); }
+
+    .blurb-panel { display: none; }
+    .blurb-panel.active { display: block; }
+
+    .stage-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .stage-list li {
+      font-size: 15px;
+      color: var(--text-soft);
+      line-height: 1.65;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stage-list li:last-child { border-bottom: none; }
+
+    .stage-list strong { color: var(--text); font-weight: 400; }
+
+    /* ── TABS (sign up / sign in) ── */
     .tab-switch {
       display: flex;
       gap: 4px;
@@ -264,11 +313,30 @@
       </div>
       <h1>Build Your <em>Voice</em></h1>
 
-      <!-- ── BLURB PLACEHOLDER ── -->
+      <!-- ── BLURB ── -->
       <div class="blurb">
-        <p class="subtitle">[BLURB PLACEHOLDER — what Milton is]</p>
-        <p class="subtitle">[BLURB PLACEHOLDER — how the pipeline works]</p>
-        <p class="subtitle">[BLURB PLACEHOLDER — what's required, roughly how long it takes]</p>
+        <div class="blurb-tabs">
+          <button class="blurb-tab-btn active" data-blurb-tab="what" type="button">What this is</button>
+          <button class="blurb-tab-btn" data-blurb-tab="how" type="button">How it works</button>
+        </div>
+
+        <div class="blurb-panel active" id="blurb-panel-what">
+          <p class="subtitle">You already have a voice, built from what you lived through before you ever trained as a coach. Most of it still sits in your body rather than on a page. Milton exists to notice that voice and put words around it, so the coaching you already do can show up in your writing without you having to invent yourself twice.</p>
+        </div>
+
+        <div class="blurb-panel" id="blurb-panel-how">
+          <ol class="stage-list">
+            <li><strong>Palette.</strong> Names your natural register.</li>
+            <li><strong>Values ranking.</strong> Reveals which values actually shape your decisions, not the ones you'd list if asked cold.</li>
+            <li><strong>Five questions.</strong> About how you talk when you mean it.</li>
+            <li><strong>References.</strong> Catch the texture underneath.</li>
+            <li><strong>Dream client.</strong> A picture of the client you're actually writing for, specific enough to feel like one person rather than an audience.</li>
+            <li><strong>Samples.</strong> Your own writing, checked against what's emerged so far.</li>
+          </ol>
+          <p class="subtitle" style="margin-top: 16px; margin-bottom: 0;">Each stage builds on the one before it, so nothing gets guessed at the end.</p>
+        </div>
+
+        <p class="subtitle" style="margin-top: 8px;">Expect around ninety minutes, in one sitting or spread across a few. You'll need honesty more than eloquence. What comes out the other side is a voice guide, built from what you actually said, ready to sit inside an AI project and write the way you would.</p>
       </div>
 
       <div id="landing-message" class="message"></div>
@@ -344,7 +412,19 @@
       if (el) el.className = 'message'
     }
 
-    // ── TAB SWITCH ──
+    // ── BLURB TAB SWITCH ──
+    document.querySelectorAll('.blurb-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.blurb-tab-btn').forEach(b => b.classList.remove('active'))
+        btn.classList.add('active')
+
+        const target = btn.dataset.blurbTab
+        document.querySelectorAll('.blurb-panel').forEach(p => p.classList.remove('active'))
+        document.getElementById('blurb-panel-' + target).classList.add('active')
+      })
+    })
+
+    // ── TAB SWITCH (sign up / sign in) ──
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
