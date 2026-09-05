@@ -44,8 +44,6 @@
       z-index: 10;
     }
 
-    .brand-header img { width: 26px; height: 26px; }
-
     .brand-header span {
       font-family: 'Cormorant Garamond', serif;
       font-size: 19px;
@@ -83,6 +81,22 @@
       text-transform: uppercase;
       color: var(--primary);
       margin-bottom: 16px;
+    }
+
+    .product-tag {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .product-tag img { width: 14px; height: 14px; }
+
+    .product-tag span {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--primary);
     }
 
     h1 {
@@ -238,14 +252,16 @@
 <body>
 
 <header class="brand-header">
-  <img src="favicon.svg" alt="Milton" />
-  <span>Milton</span>
+  <span>Techie TC</span>
 </header>
 
   <!-- ── LANDING SCREEN ── -->
   <div id="screen-landing" class="screen active">
     <div class="card card-wide">
-      <div class="eyebrow">Techie TC</div>
+      <div class="product-tag">
+        <img src="favicon.svg" alt="Milton" />
+        <span>Milton</span>
+      </div>
       <h1>Build Your <em>Voice</em></h1>
 
       <!-- ── BLURB PLACEHOLDER ── -->
