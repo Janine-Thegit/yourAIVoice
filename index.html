@@ -396,7 +396,7 @@
       <div class="section-group" style="border-top: 1px solid var(--border); padding-top: 32px;">
         <p class="section-group-title">Your story, analogy &amp; metaphor library</p>
         <p class="subtitle" style="margin-bottom: 16px;">
-          Voice is how you sound. This is what makes it unmistakably yours — the specific afternoon you realised something, the exact comparison you reach for when explaining regulation. Start collecting these as you write, and Claude can draw on them alongside your voice guide.
+          Voice is how you sound. This is what makes it unmistakably yours: the specific afternoon you realised something, the exact comparison you reach for when explaining regulation. Start collecting these as you write, and Claude can draw on them alongside your voice guide.
         </p>
         <button class="btn btn-outline" id="download-kit-btn" style="margin-top: 0;">Download starter kit</button>
       </div>
@@ -637,29 +637,56 @@ clientData = client
     })
 
     // ── LIBRARY STARTER KIT ──
-    const LIBRARY_STARTER_KIT = `# Story, Analogy & Metaphor Library — Starter Kit
+    const LIBRARY_STARTER_KIT = `# Story, Analogy & Metaphor Library: Starter Kit
 
 Voice is how you sound. This library is what makes it unmistakably yours: the
 specific afternoon you realised something, the exact comparison you reach for
 when explaining regulation. Anyone can sound like themselves with enough
-practice — far fewer people can reach for the specific things you'd reach for.
+practice. Far fewer people can reach for the specific things you'd reach for.
 
 Build this over time, in a separate chat inside the same Claude Project as
-your voice guide — not while you're writing. Project knowledge is shared
+your voice guide, not while you're writing. Project knowledge is shared
 across every chat in the Project regardless of which one you're in, so
 Claude can draw on this library from your usual writing chat too.
+
+## Metaphor, analogy, or story?
+
+**Metaphor** says one thing is another. "Grief is a tide." No comparison
+markers, no explanation. It does its work by collision, not by argument.
+
+**Analogy** says one thing works like another, leaning on the structural
+parallel to explain something unfamiliar. "Nervous system regulation is
+like tuning a radio. You're not fighting the static, you're finding the
+frequency." The mechanism matters more than the image. If the parallel
+breaks down, the analogy fails.
+
+**Personal story** is an actual account of something that happened, with
+you or someone else in it. It doesn't ask to be believed as structurally
+parallel to anything. It asks to be believed as true. Its power comes from
+specificity and stakes, not from mapping onto the reader's situation.
+
+Where these get mixed up: a personal story can function as an analogy if
+you tell it to illustrate a mechanism ("this is like the time I..."). And a
+metaphor can collapse into decoration if it isn't doing any actual
+explanatory or evocative work, just sitting there being pretty.
+
+For therapeutic writing specifically: metaphor for the felt sense (what an
+experience feels like from inside), analogy for the mechanism (why it
+happens, how it works), personal story for the proof of concept (what it
+looked like when someone lived it). Different jobs. Using the wrong one is
+like using a hammer to write a letter: mechanically possible, badly suited.
 
 ## How to add an item
 
 1. Paste the raw story, analogy, or metaphor into a chat in your Project.
-2. Ask Claude to help tag it — theme, moment, client type, tone — and format
+2. Ask Claude to help tag it (theme, moment, client type, tone) and format
    it using the item template below.
 3. Paste the finished item into your Project's knowledge.
 4. Ask Claude to search project knowledge for every library item and rebuild
    the index from scratch, then paste the new index over the old one.
 
 Rebuilding the whole index each time, rather than adding a row, means doing
-it once or fifty times gives the same result — no drift, nothing missed.
+it once or fifty times gives the same result: no drift, nothing missed.
 
 ## Item template
 
@@ -668,7 +695,7 @@ Copy this block for each new item:
 \`\`\`
 TYPE: [story / analogy / metaphor]
 STORY: [one line naming it]
-TAGS: [comma-separated — theme, moment, client type, tone]
+TAGS: [comma-separated: theme, moment, client type, tone]
 USE WHEN: [the situation this belongs in]
 ---
 [the piece itself]
@@ -682,7 +709,7 @@ Rebuild this table from scratch each time you add an item:
 |---|---|---|---|
 | | | | |
 
-Expect this to settle somewhere around 15–20 items. It isn't an archive —
+Expect this to settle somewhere around 15-20 items. It isn't an archive,
 only what actually recurs in how you talk.
 `
 
