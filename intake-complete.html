@@ -154,9 +154,39 @@
     @keyframes pulse { 0%,100%{opacity:0.3;transform:scale(0.9)} 50%{opacity:1;transform:scale(1.1)} }
 
     /* ── NEXT STEPS ── */
-    .next-steps { margin-bottom:72px; }
-    .next-steps h2 { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:400; color:var(--text-primary); margin-bottom:8px; }
-    .next-steps .lead { color:var(--text-secondary); font-size:15px; margin-bottom:36px; }
+    .next-steps, .library-section { margin-bottom:72px; }
+    .next-steps h2, .library-section h2 { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:400; color:var(--text-primary); margin-bottom:8px; }
+    .next-steps .lead, .library-section .lead { color:var(--text-secondary); font-size:15px; margin-bottom:36px; }
+
+    /* ── PLATFORM TABS ── */
+    .platform-tabs { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:28px; }
+    .tab-btn {
+      padding: 10px 22px;
+      border-radius: 999px;
+      border: 1px solid var(--border-strong);
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    }
+    .tab-btn:hover { border-color: var(--primary); color: var(--text-primary); }
+    .tab-btn.active { background: var(--fill-accent); color: var(--on-accent); border-color: var(--fill-accent); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .platform-soon {
+      padding: 32px 28px;
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.75;
+    }
+    .platform-soon strong { color: var(--text-primary); font-weight: 600; }
 
     .steps-list { display:flex; flex-direction:column; gap:16px; }
     .step-item {
@@ -207,6 +237,8 @@
       .guide-text { font-size:13px; }
       .guide-actions { flex-direction:column; }
       .step-item { padding:20px; }
+      .tab-btn { padding:9px 16px; font-size:13px; }
+      .platform-soon { padding:24px 20px; }
     }
   </style>
 </head>
@@ -217,7 +249,7 @@
     <div class="hero-content">
       <p class="hero-label">Voice guide complete</p>
       <h1 class="hero-title">Your voice,<br><em>built.</em></h1>
-      <p class="hero-sub">Five stages. One voice. Ready to paste into Claude and use from today.</p>
+      <p class="hero-sub">Six stages. One voice. Ready to paste into Claude and use from today.</p>
     </div>
   </div>
 
@@ -262,30 +294,95 @@
       <!-- NEXT STEPS -->
       <section class="next-steps">
         <p class="section-label">What to do now</p>
-        <h2>Three steps to go live</h2>
-        <p class="lead">Five minutes to set up. A lifetime of writing in your own voice.</p>
+        <h2>Set your voice guide to work</h2>
+        <p class="lead">Same voice guide, different home. Pick the platform you use.</p>
 
-        <div class="steps-list">
-          <div class="step-item">
-            <div class="step-num">1</div>
-            <div class="step-body">
-              <h4>Create a Claude Project</h4>
-              <p>Go to claude.ai, click Projects in the sidebar, and create a new project. Give it your name or your practice name.</p>
+        <div class="platform-tabs" role="tablist">
+          <button class="tab-btn active" data-tab="claude" role="tab" aria-selected="true">Claude</button>
+          <button class="tab-btn" data-tab="chatgpt" role="tab" aria-selected="false">ChatGPT</button>
+          <button class="tab-btn" data-tab="gemini" role="tab" aria-selected="false">Gemini</button>
+          <button class="tab-btn" data-tab="grok" role="tab" aria-selected="false">Grok</button>
+          <button class="tab-btn" data-tab="copilot" role="tab" aria-selected="false">Copilot</button>
+          <button class="tab-btn" data-tab="mistral" role="tab" aria-selected="false">Mistral</button>
+        </div>
+
+        <div class="tab-panel active" id="tab-claude" role="tabpanel">
+          <div class="steps-list">
+            <div class="step-item">
+              <div class="step-num">1</div>
+              <div class="step-body">
+                <h4>Create a Claude Project</h4>
+                <p>Go to claude.ai, click Projects in the sidebar, and create a new project. Give it your name or your practice name.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">2</div>
+              <div class="step-body">
+                <h4>Paste your voice guide</h4>
+                <p>In the project settings, find Custom Instructions. Paste your voice guide there. Claude will apply it to every conversation in that project.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">3</div>
+              <div class="step-body">
+                <h4>Start writing</h4>
+                <p>Open a chat in your project and ask Claude to write something — a newsletter intro, a social post, an email to a client. It will sound like you.</p>
+              </div>
             </div>
           </div>
-          <div class="step-item">
-            <div class="step-num">2</div>
-            <div class="step-body">
-              <h4>Paste your voice guide</h4>
-              <p>In the project settings, find Custom Instructions. Paste your voice guide there. Claude will apply it to every conversation in that project.</p>
-            </div>
+        </div>
+
+        <div class="tab-panel" id="tab-chatgpt" role="tabpanel">
+          <div class="platform-soon">
+            <p><strong>Instructions for ChatGPT are on their way.</strong></p>
+            <p style="margin-top:8px;">In the meantime: create a Project in ChatGPT, open its settings, and paste your voice guide into the custom instructions field. It works the same way — the guide travels, the platform is just the room it sits in.</p>
           </div>
-          <div class="step-item">
-            <div class="step-num">3</div>
-            <div class="step-body">
-              <h4>Start writing</h4>
-              <p>Open a chat in your project and ask Claude to write something — a newsletter intro, a social post, an email to a client. It will sound like you.</p>
-            </div>
+        </div>
+
+        <div class="tab-panel" id="tab-gemini" role="tabpanel">
+          <div class="platform-soon">
+            <p><strong>Instructions for Gemini are on their way.</strong></p>
+            <p style="margin-top:8px;">In the meantime: create a Gem, and paste your voice guide into its instructions field.</p>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="tab-grok" role="tabpanel">
+          <div class="platform-soon">
+            <p><strong>Instructions for Grok are on their way.</strong></p>
+            <p style="margin-top:8px;">In the meantime: create a Custom Agent, and paste your voice guide into its instructions field.</p>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="tab-copilot" role="tabpanel">
+          <div class="platform-soon">
+            <p><strong>Instructions for Copilot are on their way.</strong></p>
+            <p style="margin-top:8px;">In the meantime: look for where Copilot lets you set custom or persistent instructions, and paste your voice guide there.</p>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="tab-mistral" role="tabpanel">
+          <div class="platform-soon">
+            <p><strong>Instructions for Mistral are on their way.</strong></p>
+            <p style="margin-top:8px;">In the meantime: create a Vibe, and paste your voice guide into its instructions field.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- STORY, ANALOGY & METAPHOR LIBRARY -->
+      <section class="library-section">
+        <p class="section-label">Build over time</p>
+        <h2>Your story, analogy &amp; metaphor library</h2>
+        <p class="lead">Voice is how you sound. This is what makes it unmistakably yours: the specific afternoon you realised something, the exact comparison you reach for when explaining regulation.</p>
+
+        <div class="guide-card">
+          <div class="guide-card-header">
+            <span>Starter kit</span>
+          </div>
+          <div style="padding:28px;">
+            <p style="color:var(--text-secondary); font-size:15px; line-height:1.75; margin-bottom:20px;">
+              Start a separate chat in the same project as your voice guide, and paste in stories, analogies, and metaphors as you notice them. Project knowledge is shared across every chat, so your usual writing chat can draw on the library too. The starter kit below explains how to tell the three apart, and gives you a template for logging each one.
+            </p>
+            <button class="btn btn-outline" id="download-kit-btn">Download starter kit</button>
           </div>
         </div>
       </section>
@@ -350,7 +447,8 @@
         { num: 2, name: 'Values',  about: content?.about_values },
         { num: 3, name: 'Patterns', about: content?.about_patterns },
         { num: 4, name: 'References', about: content?.about_references },
-        { num: 5, name: 'Final', about: content?.about_paragraph_1, isFinal: true },
+        { num: 5, name: 'Dream client', about: content?.audience_profile },
+        { num: 6, name: 'Final', about: content?.about_paragraph_1, isFinal: true },
       ].filter(s => s.about);
 
       if (!stages.length) {
@@ -445,6 +543,115 @@
 
     function escapeHtml(text) {
       return (text || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // ── PLATFORM TABS ──
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected', 'false'); });
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+
+        btn.classList.add('active');
+        btn.setAttribute('aria-selected', 'true');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    // ── DOWNLOAD HELPER ──
+    function downloadText(filename, text) {
+      const blob = new Blob([text], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // ── STORY, ANALOGY & METAPHOR LIBRARY STARTER KIT ──
+    const LIBRARY_STARTER_KIT = `# Story, Analogy & Metaphor Library: Starter Kit
+
+Voice is how you sound. This library is what makes it unmistakably yours: the
+specific afternoon you realised something, the exact comparison you reach for
+when explaining regulation. Anyone can sound like themselves with enough
+practice. Far fewer people can reach for the specific things you'd reach for.
+
+Build this over time, in a separate chat inside the same project as your
+voice guide, not while you're writing. Project knowledge is shared across
+every chat in the project regardless of which one you're in, so your usual
+writing chat can draw on this library too.
+
+## Metaphor, analogy, or story?
+
+**Metaphor** says one thing is another. "Grief is a tide." No comparison
+markers, no explanation. It does its work by collision, not by argument.
+
+**Analogy** says one thing works like another, leaning on the structural
+parallel to explain something unfamiliar. "Nervous system regulation is
+like tuning a radio. You're not fighting the static, you're finding the
+frequency." The mechanism matters more than the image. If the parallel
+breaks down, the analogy fails.
+
+**Personal story** is an actual account of something that happened, with
+you or someone else in it. It doesn't ask to be believed as structurally
+parallel to anything. It asks to be believed as true. Its power comes from
+specificity and stakes, not from mapping onto the reader's situation.
+
+Where these get mixed up: a personal story can function as an analogy if
+you tell it to illustrate a mechanism ("this is like the time I..."). And a
+metaphor can collapse into decoration if it isn't doing any actual
+explanatory or evocative work, just sitting there being pretty.
+
+For therapeutic writing specifically: metaphor for the felt sense (what an
+experience feels like from inside), analogy for the mechanism (why it
+happens, how it works), personal story for the proof of concept (what it
+looked like when someone lived it). Different jobs. Using the wrong one is
+like using a hammer to write a letter: mechanically possible, badly suited.
+
+## How to add an item
+
+1. Paste the raw story, analogy, or metaphor into a chat in your project.
+2. Ask your assistant to help tag it (theme, moment, client type, tone) and
+   format it using the item template below.
+3. Paste the finished item into your project's knowledge.
+4. Ask your assistant to search project knowledge for every library item and
+   rebuild the index from scratch, then paste the new index over the old one.
+
+Rebuilding the whole index each time, rather than adding a row, means doing
+it once or fifty times gives the same result: no drift, nothing missed.
+
+## Item template
+
+Copy this block for each new item:
+
+\`\`\`
+TYPE: [story / analogy / metaphor]
+STORY: [one line naming it]
+TAGS: [comma-separated: theme, moment, client type, tone]
+USE WHEN: [the situation this belongs in]
+---
+[the piece itself]
+\`\`\`
+
+## Index
+
+Rebuild this table from scratch each time you add an item:
+
+| Title | Type | Tags | Hook |
+|---|---|---|---|
+| | | | |
+
+Expect this to settle somewhere around 15-20 items. It isn't an archive,
+only what actually recurs in how you talk.
+`;
+
+    const kitBtn = document.getElementById('download-kit-btn');
+    if (kitBtn) {
+      kitBtn.addEventListener('click', () => {
+        downloadText('story-analogy-metaphor-library-starter-kit.md', LIBRARY_STARTER_KIT);
+      });
     }
 
     init();
