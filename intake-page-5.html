@@ -52,7 +52,7 @@
     /* ── MESSAGES ── */
     .messages { display:flex; flex-direction:column; gap:20px; margin-bottom:32px; }
 
-    .message { display:flex; flex-direction:column; gap:6px; }
+    .message { display:flex; flex-direction:column; gap:6px; scroll-margin-bottom: var(--composer-h, 140px); }
 
     /* Claude messages */
     .message-claude .bubble {
@@ -384,6 +384,22 @@ I'll read across all of it and tell you what's forming — who this reader actua
     }
 
     // ── UI HELPERS ──
+    // Keeps the newest message visible above the sticky composer, the way a
+    // normal chat auto-scrolls -- scroll-margin-bottom (kept in sync with the
+    // composer's real height) stops scrollIntoView from tucking the message
+    // underneath it.
+    function updateComposerHeight() {
+      const area = document.getElementById('input-area').style.display !== 'none'
+        ? document.getElementById('input-area')
+        : document.getElementById('dreamclient-area');
+      document.documentElement.style.setProperty('--composer-h', (area.offsetHeight + 24) + 'px');
+    }
+
+    function scrollToLatest(div) {
+      updateComposerHeight();
+      div.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+
     function addClaudeMessage(text) {
       const messages = document.getElementById('messages');
       const div = document.createElement('div');
@@ -392,7 +408,7 @@ I'll read across all of it and tell you what's forming — who this reader actua
       const formatted = text.replace(/\[([^\]]+)\]/g, '<span class="presence">[$1]</span>');
       div.innerHTML = `<div class="sender">Your voice guide</div><div class="bubble">${formatted}</div>`;
       messages.appendChild(div);
-      div.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      scrollToLatest(div);
     }
 
     function addCoachMessage(text) {
@@ -401,7 +417,7 @@ I'll read across all of it and tell you what's forming — who this reader actua
       div.className = 'message message-coach';
       div.innerHTML = `<div class="bubble">${escapeHtml(text)}</div><div class="sender">You</div>`;
       messages.appendChild(div);
-      div.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      scrollToLatest(div);
     }
 
     function addLoadingMessage() {
@@ -411,7 +427,7 @@ I'll read across all of it and tell you what's forming — who this reader actua
       div.id = 'loading-msg';
       div.innerHTML = `<div class="bubble"><div class="loading-dots"><span></span><span></span><span></span></div></div>`;
       messages.appendChild(div);
-      div.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      scrollToLatest(div);
       return div;
     }
 
@@ -579,6 +595,7 @@ I'll read across all of it and tell you what's forming — who this reader actua
       ta.addEventListener('input', () => {
         ta.style.height = 'auto';
         ta.style.height = Math.min(ta.scrollHeight, 200) + 'px';
+        updateComposerHeight();
       });
       ta.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) sendMessage();
