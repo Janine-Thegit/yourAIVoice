@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Milton — Techie TC</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+  <link rel="apple-touch-icon" href="favicon-180.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary:   #7B9EC4;
+      --neutral:   #1A1D23;
+      --text:      #E8EAF0;
+      --text-soft: rgba(232,234,240,0.55);
+      --border:    rgba(232,234,240,0.10);
+      --surface:   #22262E;
+      --surface-2: #2A2F3A;
+      --success:   #7A9E87;
+      --error:     #C4897A;
+    }
+
+    body {
+      background: var(--neutral);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: 16px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ── BRAND HEADER ── */
+    .brand-header {
+      position: fixed;
+      top: 28px;
+      left: 32px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 10;
+    }
+
+    .brand-header img { width: 26px; height: 26px; }
+
+    .brand-header span {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 19px;
+      font-weight: 300;
+      letter-spacing: 0.02em;
+      color: var(--text);
+    }
+
+    /* ── SCREENS ── */
+    .screen {
+      display: none;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      padding: 100px 24px 40px;
+    }
+
+    .screen.active { display: flex; }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 48px;
+      max-width: 480px;
+      width: 100%;
+    }
+
+    .card-wide { max-width: 640px; }
+
+    /* ── TYPOGRAPHY ── */
+    .eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      font-weight: 300;
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    h1 em { font-style: italic; color: var(--primary); }
+
+    .subtitle {
+      font-size: 15px;
+      color: var(--text-soft);
+      margin-bottom: 32px;
+      line-height: 1.65;
+    }
+
+    /* ── BLURB (placeholder block) ── */
+    .blurb {
+      margin-bottom: 36px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .blurb .subtitle { margin-bottom: 16px; }
+    .blurb .subtitle:last-child { margin-bottom: 0; }
+
+    /* ── TABS ── */
+    .tab-switch {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 28px;
+      background: var(--surface-2);
+      border-radius: 4px;
+      padding: 4px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px 16px;
+      background: transparent;
+      border: none;
+      border-radius: 3px;
+      color: var(--text-soft);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .tab-btn.active {
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .tab-btn:hover:not(.active) { color: var(--text); }
+
+    /* ── FORM ELEMENTS ── */
+    .field { margin-bottom: 24px; }
+
+    label {
+      display: block;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-bottom: 8px;
+    }
+
+    input[type="email"],
+    input[type="text"] {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      background: var(--surface-2);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 300;
+      transition: border-color 0.2s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-block;
+      padding: 13px 28px;
+      background: var(--primary);
+      color: white;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      width: 100%;
+      text-align: center;
+    }
+
+    .btn:hover { opacity: 0.85; }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      margin-top: 12px;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      opacity: 1;
+    }
+
+    /* ── MESSAGES ── */
+    .message {
+      padding: 14px 18px;
+      border-radius: 3px;
+      font-size: 14px;
+      margin-bottom: 24px;
+      display: none;
+    }
+
+    .message.success {
+      background: color-mix(in srgb, var(--success) 12%, white);
+      border: 1px solid var(--success);
+      color: var(--text);
+    }
+
+    .message.error {
+      background: color-mix(in srgb, var(--error) 12%, white);
+      border: 1px solid var(--error);
+      color: var(--text);
+    }
+
+    .message.visible { display: block; }
+  </style>
+</head>
+<body>
+
+<header class="brand-header">
+  <img src="favicon.svg" alt="Milton" />
+  <span>Milton</span>
+</header>
+
+  <!-- ── LANDING SCREEN ── -->
+  <div id="screen-landing" class="screen active">
+    <div class="card card-wide">
+      <div class="eyebrow">Techie TC</div>
+      <h1>Build Your <em>Voice</em></h1>
+
+      <!-- ── BLURB PLACEHOLDER ── -->
+      <div class="blurb">
+        <p class="subtitle">[BLURB PLACEHOLDER — what Milton is]</p>
+        <p class="subtitle">[BLURB PLACEHOLDER — how the pipeline works]</p>
+        <p class="subtitle">[BLURB PLACEHOLDER — what's required, roughly how long it takes]</p>
+      </div>
+
+      <div id="landing-message" class="message"></div>
+
+      <div class="tab-switch">
+        <button class="tab-btn active" id="tab-signup" data-mode="signup" type="button">Sign up</button>
+        <button class="tab-btn" id="tab-signin" data-mode="signin" type="button">Sign in</button>
+      </div>
+
+      <!-- SIGN UP -->
+      <div id="signup-fields">
+        <div class="field">
+          <label for="signup-name">Your name</label>
+          <input type="text" id="signup-name" placeholder="Jane Coach" />
+        </div>
+        <div class="field">
+          <label for="signup-company">Company name</label>
+          <input type="text" id="signup-company" placeholder="New Roots Coaching" />
+        </div>
+        <div class="field">
+          <label for="signup-email">Email address</label>
+          <input type="email" id="signup-email" placeholder="your@email.com" />
+        </div>
+        <button class="btn" id="signup-btn">Start your voice project</button>
+      </div>
+
+      <!-- SIGN IN -->
+      <div id="signin-fields" style="display: none;">
+        <div class="field">
+          <label for="signin-email">Email address</label>
+          <input type="email" id="signin-email" placeholder="your@email.com" />
+        </div>
+        <button class="btn" id="signin-btn">Send me my link</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CHECK EMAIL SCREEN ── -->
+  <div id="screen-check-email" class="screen">
+    <div class="card">
+      <div class="eyebrow">Check your email</div>
+      <h1>Look for our link</h1>
+      <p class="subtitle">We've sent a sign-in link to your email. Click it to continue. The link expires in 24 hours.</p>
+      <button class="btn btn-outline" id="back-to-landing-btn">Back</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script>
+    const { createClient } = supabase
+    const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+    // Redirect target is index.html alongside this page, wherever it's hosted.
+    const REDIRECT_URL = new URL('index.html', window.location.href).toString()
+
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'))
+      document.getElementById(id).classList.add('active')
+      window.scrollTo(0, 0)
+    }
+
+    function showMessage(containerId, type, text) {
+      const el = document.getElementById(containerId)
+      if (el) {
+        el.className = 'message ' + type + ' visible'
+        el.textContent = text
+      }
+    }
+
+    function clearMessage(containerId) {
+      const el = document.getElementById(containerId)
+      if (el) el.className = 'message'
+    }
+
+    // ── TAB SWITCH ──
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
+        btn.classList.add('active')
+
+        const mode = btn.dataset.mode
+        document.getElementById('signup-fields').style.display = mode === 'signup' ? 'block' : 'none'
+        document.getElementById('signin-fields').style.display = mode === 'signin' ? 'block' : 'none'
+        clearMessage('landing-message')
+      })
+    })
+
+    // ── SIGN UP (name + company + email, metadata rides the magic link) ──
+    document.getElementById('signup-btn').addEventListener('click', async () => {
+      const name = document.getElementById('signup-name').value.trim()
+      const company = document.getElementById('signup-company').value.trim()
+      const email = document.getElementById('signup-email').value.trim()
+
+      if (!name || !company || !email) {
+        showMessage('landing-message', 'error', 'Please fill in your name, company, and email.')
+        return
+      }
+
+      const btn = document.getElementById('signup-btn')
+      btn.disabled = true
+      btn.textContent = 'Sending...'
+
+      const { error } = await db.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: REDIRECT_URL,
+          data: { name, company_name: company }
+        }
+      })
+
+      if (error) {
+        showMessage('landing-message', 'error', 'Something went wrong. Please try again.')
+        btn.disabled = false
+        btn.textContent = 'Start your voice project'
+      } else {
+        showScreen('screen-check-email')
+      }
+    })
+
+    // ── SIGN IN (email only, no metadata) ──
+    document.getElementById('signin-btn').addEventListener('click', async () => {
+      const email = document.getElementById('signin-email').value.trim()
+
+      if (!email) {
+        showMessage('landing-message', 'error', 'Please enter your email address.')
+        return
+      }
+
+      const btn = document.getElementById('signin-btn')
+      btn.disabled = true
+      btn.textContent = 'Sending...'
+
+      const { error } = await db.auth.signInWithOtp({
+        email,
+        options: { emailRedirectTo: REDIRECT_URL }
+      })
+
+      if (error) {
+        showMessage('landing-message', 'error', 'Something went wrong. Please try again.')
+        btn.disabled = false
+        btn.textContent = 'Send me my link'
+      } else {
+        showScreen('screen-check-email')
+      }
+    })
+
+    // ── BACK ──
+    document.getElementById('back-to-landing-btn').addEventListener('click', () => {
+      showScreen('screen-landing')
+      document.getElementById('signup-name').value = ''
+      document.getElementById('signup-company').value = ''
+      document.getElementById('signup-email').value = ''
+      document.getElementById('signin-email').value = ''
+    })
+  </script>
+
+</body>
+</html>

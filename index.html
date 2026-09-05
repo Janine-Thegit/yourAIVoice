@@ -553,13 +553,22 @@ if (clientError || !client) {
     },
   })
 
-  if (!res.ok) {
+  const result = await res.json().catch(() => ({}))
+
+  if (res.status === 404 && result.error === 'no_account') {
+    // A sign-in attempt on an email nobody has signed up with. Don't
+    // mint a nameless account -- send them to the sign-up form instead.
+    await db.auth.signOut()
+    window.location.href = 'landing.html'
+    return
+  }
+
+  if (!res.ok || !result.success) {
     showScreen('screen-login')
     showMessage('login-message', 'error', 'Something went wrong setting up your account. Please try again.')
     return
   }
 
-  const result = await res.json()
   client = result.client
 }
 
