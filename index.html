@@ -483,14 +483,21 @@
     })
 
     // ── AUTH STATE ──
+    let clientDataLoadInFlight = false
+
     db.auth.onAuthStateChange(async (event, session) => {
-      if (session) {
-        await loadClientData(session.user.email)
+      if (session && !clientDataLoadInFlight) {
+        clientDataLoadInFlight = true
+        try {
+          await loadClientData(session.user.email, session.access_token)
+        } finally {
+          clientDataLoadInFlight = false
+        }
       }
     })
 
     // ── LOAD CLIENT DATA ──
-    async function loadClientData(email) {
+    async function loadClientData(email, accessToken) {
       showScreen('screen-loading')
 
     let { data: client, error: clientError } = await db
@@ -503,13 +510,15 @@ if (clientError || !client) {
   // No account yet for this email -- provision one now. Runs
   // server-side via the service role so it doesn't depend on
   // opening a client-side INSERT policy on clients/client_content.
-  const { data: { session } } = await db.auth.getSession()
+  // Uses the access token already handed to us by onAuthStateChange --
+  // calling getSession() again here raced against session persistence
+  // right after an implicit-grant redirect and could return null.
 
   const res = await fetch('https://wubukfrhdgexbppqanaw.supabase.co/functions/v1/create-client', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${session.access_token}`,
+      'Authorization': `Bearer ${accessToken}`,
     },
   })
 
