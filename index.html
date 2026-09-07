@@ -464,7 +464,11 @@
 
       const { error } = await db.auth.signInWithOtp({
         email,
-        options: { emailRedirectTo: window.location.href }
+        // Strip any leftover #error=... fragment from a previous expired
+        // link before using this as the redirect target -- otherwise the
+        // new link's token gets appended as a second fragment, which the
+        // client can't parse back out.
+        options: { emailRedirectTo: window.location.origin + window.location.pathname }
       })
 
       if (error) {
